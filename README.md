@@ -1,4 +1,4 @@
 # xargas.github.io
-Xargas Web
+Xargas.eu
 
-(c) 2025 Xargas website, all rights reserved
+(c) 2025, all rights reserved
