@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>
+      
+        PlatformIO - Board settings &middot; xargas.eu
+      
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/public/style.css">
+  </head>
+
+  <body>
+    <div class="navbar">
+      <h1>Xargas.eu</h1>
+      <p>Private website to write about my hobbies</p>
+      <a class="navbar-item" href="/">Home</a>
+      
+        <a class="navbar-item" href="/blog/">Blog</a>
+      
+        <a class="navbar-item" href="/3dprint/index.html">3D Printing</a>
+      
+        <a class="navbar-item" href="/3dmodel/index.html">3D Modeling</a>
+      
+        <a class="navbar-item" href="/embeddedsw/index.html">Embedded Software</a>
+      
+      
+        <a class="navbar-item" href="/pages/impressum.html">Impressum</a>
+
+      <p>&copy; 2025. All rights reserved.</p>
+    </div>
+    <div class="content">
+      <div class="page">
+  <h1 class="page-title">PlatformIO - Board settings</h1>
+  <span class="page-date">28.01.2025</span>
+  <p>On this page I’ll document the settings I use in VS Code in combination with PlatformIO for various embedded boards.</p>
+
+<h2 id="board-arduino-nano-33-ble">Board “Arduino Nano 33 BLE”</h2>
+
+<p><img src="/img/boards/arduino_nano_33_ble_A.jpg" alt="Board-A" />
+<img src="/img/boards/arduino_nano_33_ble_B.jpg" alt="Board-B" /></p>
+
+<div class="language-plaintext platformioini highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[env:nano33ble]
+platform = nordicnrf52
+board = nano33ble
+framework = arduino
+</code></pre></div></div>
+
+<ul>
+  <li>Related info from PlatformIO: <a href="https://docs.platformio.org/en/stable/boards/nordicnrf52/nano33ble.html">Link</a></li>
+</ul>
+
+<h2 id="board-esp32-c3-super-mini">Board “ESP32 C3 Super Mini”</h2>
+
+<p><img src="/img/boards/esp32_c3_super_mini_A.jpg" alt="Board-A" />
+<img src="/img/boards/esp32_c3_super_mini_B.jpg" alt="Board-B" /></p>
+
+<div class="language-plaintext platformioini highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[env:lolin_c3_mini]
+platform = espressif32
+board = lolin_c3_mini
+framework = arduino
+
+board_flags = -DARDUINO_USB_MODE=1 -DARDUINO_USB_CDC_ON_BOOT=1
+</code></pre></div></div>
+
+<ul>
+  <li>Related info from PlatformIO: <a href="https://docs.platformio.org/en/stable/boards/espressif32/lolin_c3_mini.html">Link</a></li>
+  <li>Upload from VS Code:
+    <ol>
+      <li>Press and hold BOOT button</li>
+      <li>Press and release RST button</li>
+      <li>Release BOOT button</li>
+      <li>Upload from VS Code (Ctrl+Alt+U)</li>
+      <li>Press RST button to start the program</li>
+    </ol>
+  </li>
+</ul>
+
+
+</div>
+
+    </div>
+  </body>
+</html>
+

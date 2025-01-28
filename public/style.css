@@ -103,6 +103,12 @@ pre code
   background-color: transparent;
 }
 
+img
+{
+  max-width: 100%;
+  height: auto;
+}
+
 /******************************************************************************/
 /* classes - general */
 
@@ -116,7 +122,6 @@ pre code
   display: table-cell;
   padding-right: 1rem;
 }
-
 
 /******************************************************************************/
 /* classes - main */
@@ -263,3 +268,19 @@ pre code
 {
   text-shadow: -1px 0px #101020;
 }
+
+
+
+/******************************************************************************/
+/* classes - page */
+
+.page-entry
+{
+  box-shadow: 0px 0px 5px #a0a0e0B0, 0px 0px 40px #a0a0e060 inset;
+  padding-left: 30px;
+  padding-top: 0px;
+  padding-right: 30px;
+  padding-bottom: 0px;
+  margin-bottom: 20px;
+}
+
