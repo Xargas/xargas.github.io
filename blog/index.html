@@ -36,6 +36,24 @@
       <div class="blog">
   
     <div class="blog-entry">
+      <h1 class="blog-title"><a href="/2025/02/05/bashPromptMachineIcon.html">Icon/emoji in bash prompt for easier machine identification</a></h1>
+      <span class="blog-date">05.02.2025</span>
+      <hr>
+      <div class="blog-content"><p>Using Linux on various machines, I wanted to have something that helped me to identify on which machine I am currently working.
+The usual bash prompt settings in PS1 indicate this, but I needed to read the text. I wanted something more intuitive.
+Searching for a solution I found that modern bash is capable of using unicode. So I found my solution.</p>
+
+<p>To get to the needed unicode I used the <a href="https://emojipedia.org/">Emojipedia</a>. There I selected to use 🍓 for a Raspberry Pi device and 🪟 for a Windows Subsystem Linux installation.</p>
+
+<p>To get the icon into the prompt I just copied the unicode character and pasted it into the PS1 prompt in the <code class="language-plaintext highlighter-rouge">~/.bashrc</code> file.</p>
+
+<p>Example:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\] 🪟:\[\033[01;34m\]\w\[\033[00m\]\$ '
+</code></pre></div></div>
+</div>
+    </div>
+  
+    <div class="blog-entry">
       <h1 class="blog-title"><a href="/2025/01/23/buildFreeCAD.html">Building FreeCAD on Windows</a></h1>
       <span class="blog-date">23.01.2025</span>
       <hr>

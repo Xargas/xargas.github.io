@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>
+      
+        Icon/emoji in bash prompt for easier machine identification &middot; xargas.eu
+      
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/public/style.css">
+  </head>
+
+  <body>
+    <div class="navbar">
+      <h1>Xargas.eu</h1>
+      <p>Private website to write about my hobbies</p>
+      <a class="navbar-item" href="/">Home</a>
+      
+        <a class="navbar-item" href="/blog/">Blog</a>
+      
+        <a class="navbar-item" href="/3dprint/index.html">3D Printing</a>
+      
+        <a class="navbar-item" href="/3dmodel/index.html">3D Modeling</a>
+      
+        <a class="navbar-item" href="/embeddedsw/index.html">Embedded Software</a>
+      
+      
+        <a class="navbar-item" href="/pages/impressum.html">Impressum</a>
+
+      <p>&copy; 2025. All rights reserved.</p>
+    </div>
+    <div class="content">
+      <div class="post post-entry">
+  <h1 class="post-title">Icon/emoji in bash prompt for easier machine identification</h1>
+  <span class="post-date">05.02.2025</span>
+  <hr>
+  <div class="post-content"><p>Using Linux on various machines, I wanted to have something that helped me to identify on which machine I am currently working.
+The usual bash prompt settings in PS1 indicate this, but I needed to read the text. I wanted something more intuitive.
+Searching for a solution I found that modern bash is capable of using unicode. So I found my solution.</p>
+
+<p>To get to the needed unicode I used the <a href="https://emojipedia.org/">Emojipedia</a>. There I selected to use 🍓 for a Raspberry Pi device and 🪟 for a Windows Subsystem Linux installation.</p>
+
+<p>To get the icon into the prompt I just copied the unicode character and pasted it into the PS1 prompt in the <code class="language-plaintext highlighter-rouge">~/.bashrc</code> file.</p>
+
+<p>Example:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\] 🪟:\[\033[01;34m\]\w\[\033[00m\]\$ '
+</code></pre></div></div>
+</div>
+</div>
+
+
+    </div>
+  </body>
+</html>
+
