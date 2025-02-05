@@ -11,6 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="stylesheet" href="/public/style.css">
+    <link rel="stylesheet" href="/public/syntax.css">
   </head>
 
   <body>
@@ -46,7 +47,7 @@ Searching for a solution I found that modern bash is capable of using unicode. S
 <p>To get the icon into the prompt I just copied the unicode character and pasted it into the PS1 prompt in the <code class="language-plaintext highlighter-rouge">~/.bashrc</code> file.</p>
 
 <p>Example:</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\] 🪟:\[\033[01;34m\]\w\[\033[00m\]\$ '
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">PS1</span><span class="o">=</span><span class="s1">'${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\] 🪟:\[\033[01;34m\]\w\[\033[00m\]\$ '</span>
 </code></pre></div></div>
 </div>
 </div>

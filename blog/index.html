@@ -11,6 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="stylesheet" href="/public/style.css">
+    <link rel="stylesheet" href="/public/syntax.css">
   </head>
 
   <body>
@@ -48,44 +49,44 @@ This works very well, until the URL uses encoded characters. I also wanted to co
 The one I found was using perl to do the encoding/decoding.</p>
 
 <p>After installing nginx, I created the file <code class="language-plaintext highlighter-rouge">/etc/nginx/sites-available/googleadservices-redirect</code>, linked it to the <code class="language-plaintext highlighter-rouge">sites-enabled</code> and used it in a SSL configured nginx instance:</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>perl_set $localuri '
-  sub {
-    my $r = shift;
-    my $arg_adurl = $r-&gt;variable("arg_adurl");
-    my $arg_adurl_decoded = $r-&gt;unescape($arg_adurl);
-    return $arg_adurl_decoded
-  }
-';
+<div class="language-nginx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">perl_set</span> <span class="nv">$localuri</span> <span class="s">'</span>
+  <span class="s">sub</span> <span class="p">{</span>
+    <span class="kn">my</span> <span class="nv">$r</span> <span class="p">=</span> <span class="s">shift</span><span class="p">;</span>
+    <span class="kn">my</span> <span class="nv">$arg_adurl</span> <span class="p">=</span> <span class="nv">$r-</span><span class="s">&gt;variable("arg_adurl")</span><span class="p">;</span>
+    <span class="kn">my</span> <span class="nv">$arg_adurl_decoded</span> <span class="p">=</span> <span class="nv">$r-</span><span class="s">&gt;unescape(</span><span class="nv">$arg_adurl</span><span class="s">)</span><span class="p">;</span>
+    <span class="kn">return</span> <span class="nv">$arg_adurl_decoded</span>
+  <span class="err">}</span>
+<span class="s">'</span><span class="p">;</span>
 
-server {
-  listen 443 ssl default_server;
-  listen [::]:443 ssl default_server;
+<span class="kn">server</span> <span class="p">{</span>
+  <span class="kn">listen</span> <span class="mi">443</span> <span class="s">ssl</span> <span class="s">default_server</span><span class="p">;</span>
+  <span class="kn">listen</span> <span class="s">[::]:443</span> <span class="s">ssl</span> <span class="s">default_server</span><span class="p">;</span>
 
-  ssl_certificate /etc/nginx/ssl/nginx-self-signed.crt;
-  ssl_certificate_key /etc/nginx/ssl/nginx-self-signed.key;
+  <span class="kn">ssl_certificate</span> <span class="n">/etc/nginx/ssl/nginx-self-signed.crt</span><span class="p">;</span>
+  <span class="kn">ssl_certificate_key</span> <span class="n">/etc/nginx/ssl/nginx-self-signed.key</span><span class="p">;</span>
 
-  gzip off;
+  <span class="kn">gzip</span> <span class="no">off</span><span class="p">;</span>
 
-  server_name www.googleadservices.com;
+  <span class="kn">server_name</span> <span class="s">www.googleadservices.com</span><span class="p">;</span>
 
-  return 301 $localuri;
-}
+  <span class="kn">return</span> <span class="mi">301</span> <span class="nv">$localuri</span><span class="p">;</span>
+<span class="p">}</span>
 </code></pre></div></div>
 
 <p>As all redirects are only in local networks, self signed certificates created via openssl were good enough:</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl req -x509 -newkey rsa:4096 -days 365 -nodes -keyout /etc/nginx/ssl/nginx-self-signed.key -out /etc/nginx/ssl/nginx-self-signed.crt -subj "/CN=www.googleadservices.com"
-  -addext "subjectAltName=DNS:www.googleadservices.com,DNS:googleadservices.com,IP:192.168.0.250"
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl req <span class="nt">-x509</span> <span class="nt">-newkey</span> rsa:4096 <span class="nt">-days</span> 365 <span class="nt">-nodes</span> <span class="nt">-keyout</span> /etc/nginx/ssl/nginx-self-signed.key <span class="nt">-out</span> /etc/nginx/ssl/nginx-self-signed.crt <span class="nt">-subj</span> <span class="s2">"/CN=www.googleadservices.com"</span>
+  <span class="nt">-addext</span> <span class="s2">"subjectAltName=DNS:www.googleadservices.com,DNS:googleadservices.com,IP:192.168.0.250"</span>
 </code></pre></div></div>
 
 <p>On the other side, I only needed to support most modern software, so I restricted encryption options in <code class="language-plaintext highlighter-rouge">/etc/nginx/nginx.conf</code> and enabled the perl module:</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
-  perl_modules perl/lib;
-  ...
-  ssl_protocols TLSv1.3;
-  ssl_ecdh_curve X25519:prime256v1:secp384r1;
-  ssl_prefer_server_ciphers on;
-  ...
-}
+<div class="language-nginx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">http</span> <span class="p">{</span>
+  <span class="kn">perl_modules</span> <span class="nc">perl/lib</span><span class="p">;</span>
+  <span class="kn">...</span><span class="p">;</span>
+  <span class="kn">ssl_protocols</span> <span class="s">TLSv1.3</span><span class="p">;</span>
+  <span class="kn">ssl_ecdh_curve</span> <span class="s">X25519:prime256v1:secp384r1</span><span class="p">;</span>
+  <span class="kn">ssl_prefer_server_ciphers</span> <span class="no">on</span><span class="p">;</span>
+  <span class="kn">...</span><span class="p">;</span>
+<span class="p">}</span>
 </code></pre></div></div>
 
 <p>I redirected the DNS <code class="language-plaintext highlighter-rouge">www.googleadservices.com</code> via Pi-hole to the nginx installation and then I had the necessary redirects working locally. Problem solved.</p>
@@ -105,7 +106,7 @@ Searching for a solution I found that modern bash is capable of using unicode. S
 <p>To get the icon into the prompt I just copied the unicode character and pasted it into the PS1 prompt in the <code class="language-plaintext highlighter-rouge">~/.bashrc</code> file.</p>
 
 <p>Example:</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\] 🪟:\[\033[01;34m\]\w\[\033[00m\]\$ '
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">PS1</span><span class="o">=</span><span class="s1">'${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\] 🪟:\[\033[01;34m\]\w\[\033[00m\]\$ '</span>
 </code></pre></div></div>
 </div>
     </div>
@@ -125,15 +126,17 @@ For now, I wanted a complete but very compact step-by-step file to go from “no
   <li>Get <a href="https://cmake.org/download/">Cmake</a> and install (version 3.31.4). It should be available on the system PATH.</li>
   <li>Download the matching <a href="https://github.com/FreeCAD/FreeCAD-LibPack/releases">LibPack release</a> for FreeCAD and extract it somewhere (I put it at “C:/_public/GitHub/LibPack-1.1.0-v3.1.0-Release”).</li>
   <li>Clone the FreeCAD repository (I put it at “C:/_public/GitHub/FreeCAD”).<br />
-<code class="language-plaintext highlighter-rouge">git clone --recurse-submodules https://github.com/FreeCAD/FreeCAD.git</code></li>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone <span class="nt">--recurse-submodules</span> https://github.com/FreeCAD/FreeCAD.git
+</code></pre></div>    </div>
+  </li>
   <li>Open a terminal and do the basic cmake configuration via<br />
-<code class="language-plaintext highlighter-rouge">
-cmake -S C:/_public/GitHub/FreeCAD -B C:/_public/GitHub/FreeCAD/build/release -G "Visual Studio 17 2022" -DFREECAD_LIBPACK_DIR:PATH="C:/_public/GitHub/LibPack-1.1.0-v3.1.0-Release" -DFREECAD_COPY_LIBPACK_BIN_TO_BUILD:BOOL="1" -DFREECAD_COPY_DEPEND_DIRS_TO_BUILD:BOOL="1" -DFREECAD_COPY_PLUGINS_BIN_TO_BUILD:BOOL="1"
-</code></li>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cmake <span class="nt">-S</span> C:/_public/GitHub/FreeCAD <span class="nt">-B</span> C:/_public/GitHub/FreeCAD/build/release <span class="nt">-G</span> <span class="s2">"Visual Studio 17 2022"</span> <span class="nt">-DFREECAD_LIBPACK_DIR</span>:PATH<span class="o">=</span><span class="s2">"C:/_public/GitHub/LibPack-1.1.0-v3.1.0-Release"</span> <span class="nt">-DFREECAD_COPY_LIBPACK_BIN_TO_BUILD</span>:BOOL<span class="o">=</span><span class="s2">"1"</span> <span class="nt">-DFREECAD_COPY_DEPEND_DIRS_TO_BUILD</span>:BOOL<span class="o">=</span><span class="s2">"1"</span> <span class="nt">-DFREECAD_COPY_PLUGINS_BIN_TO_BUILD</span>:BOOL<span class="o">=</span><span class="s2">"1"</span>
+</code></pre></div>    </div>
+  </li>
   <li>Build FreeCAD from command line via<br />
-<code class="language-plaintext highlighter-rouge">
-cmake --build C:/_public/GitHub/FreeCAD/build/release --config Release
-</code></li>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cmake <span class="nt">--build</span> C:/_public/GitHub/FreeCAD/build/release <span class="nt">--config</span> Release
+</code></pre></div>    </div>
+  </li>
   <li>After some time, the build finished and let me start FreeCAD.exe (In my case “C:/_public/GitHub/FreeCAD/build/release/bin/FreeCAD.exe”).</li>
 </ol>
 

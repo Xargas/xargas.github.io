@@ -11,6 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="stylesheet" href="/public/style.css">
+    <link rel="stylesheet" href="/public/syntax.css">
   </head>
 
   <body>
@@ -48,15 +49,17 @@ For now, I wanted a complete but very compact step-by-step file to go from “no
   <li>Get <a href="https://cmake.org/download/">Cmake</a> and install (version 3.31.4). It should be available on the system PATH.</li>
   <li>Download the matching <a href="https://github.com/FreeCAD/FreeCAD-LibPack/releases">LibPack release</a> for FreeCAD and extract it somewhere (I put it at “C:/_public/GitHub/LibPack-1.1.0-v3.1.0-Release”).</li>
   <li>Clone the FreeCAD repository (I put it at “C:/_public/GitHub/FreeCAD”).<br />
-<code class="language-plaintext highlighter-rouge">git clone --recurse-submodules https://github.com/FreeCAD/FreeCAD.git</code></li>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone <span class="nt">--recurse-submodules</span> https://github.com/FreeCAD/FreeCAD.git
+</code></pre></div>    </div>
+  </li>
   <li>Open a terminal and do the basic cmake configuration via<br />
-<code class="language-plaintext highlighter-rouge">
-cmake -S C:/_public/GitHub/FreeCAD -B C:/_public/GitHub/FreeCAD/build/release -G "Visual Studio 17 2022" -DFREECAD_LIBPACK_DIR:PATH="C:/_public/GitHub/LibPack-1.1.0-v3.1.0-Release" -DFREECAD_COPY_LIBPACK_BIN_TO_BUILD:BOOL="1" -DFREECAD_COPY_DEPEND_DIRS_TO_BUILD:BOOL="1" -DFREECAD_COPY_PLUGINS_BIN_TO_BUILD:BOOL="1"
-</code></li>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cmake <span class="nt">-S</span> C:/_public/GitHub/FreeCAD <span class="nt">-B</span> C:/_public/GitHub/FreeCAD/build/release <span class="nt">-G</span> <span class="s2">"Visual Studio 17 2022"</span> <span class="nt">-DFREECAD_LIBPACK_DIR</span>:PATH<span class="o">=</span><span class="s2">"C:/_public/GitHub/LibPack-1.1.0-v3.1.0-Release"</span> <span class="nt">-DFREECAD_COPY_LIBPACK_BIN_TO_BUILD</span>:BOOL<span class="o">=</span><span class="s2">"1"</span> <span class="nt">-DFREECAD_COPY_DEPEND_DIRS_TO_BUILD</span>:BOOL<span class="o">=</span><span class="s2">"1"</span> <span class="nt">-DFREECAD_COPY_PLUGINS_BIN_TO_BUILD</span>:BOOL<span class="o">=</span><span class="s2">"1"</span>
+</code></pre></div>    </div>
+  </li>
   <li>Build FreeCAD from command line via<br />
-<code class="language-plaintext highlighter-rouge">
-cmake --build C:/_public/GitHub/FreeCAD/build/release --config Release
-</code></li>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cmake <span class="nt">--build</span> C:/_public/GitHub/FreeCAD/build/release <span class="nt">--config</span> Release
+</code></pre></div>    </div>
+  </li>
   <li>After some time, the build finished and let me start FreeCAD.exe (In my case “C:/_public/GitHub/FreeCAD/build/release/bin/FreeCAD.exe”).</li>
 </ol>
 
