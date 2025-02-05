@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>
+      
+        Using nginx combined with Pi-hole to block server site tracking &middot; xargas.eu
+      
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/public/style.css">
+  </head>
+
+  <body>
+    <div class="navbar">
+      <h1>Xargas.eu</h1>
+      <p>Private website to write about my hobbies</p>
+      <a class="navbar-item" href="/">Home</a>
+      
+        <a class="navbar-item" href="/blog/">Blog</a>
+      
+        <a class="navbar-item" href="/3dprint/index.html">3D Printing</a>
+      
+        <a class="navbar-item" href="/3dmodel/index.html">3D Modeling</a>
+      
+        <a class="navbar-item" href="/embeddedsw/index.html">Embedded Software</a>
+      
+      
+        <a class="navbar-item" href="/pages/impressum.html">Impressum</a>
+
+      <p>&copy; 2025. All rights reserved.</p>
+    </div>
+    <div class="content">
+      <div class="post post-entry">
+  <h1 class="post-title">Using nginx combined with Pi-hole to block server site tracking</h1>
+  <span class="post-date">05.02.2025</span>
+  <hr>
+  <div class="post-content"><p><a href="https://pi-hole.net/">Pi-Hole</a> is, in my opinion, a great tool for blocking ads, tracking and malware. But sometimes it seems to be blocking a bit too much.
+One case I identified were sites that would come up as small ads in my Google searches. I still wanted those links to work.
+My analysis showed that the needed target URL was nicely encoded in the advertisement URL. So I thought of <a href="https://nginx.org/">nginx</a> for a solution.</p>
+
+<p>The easy part with nginx is the redirection of one URL to another URL. Just use <code class="language-plaintext highlighter-rouge">rewrite</code> or <code class="language-plaintext highlighter-rouge">return</code> filters.
+This works very well, until the URL uses encoded characters. I also wanted to cover this case and did some research on options.
+The one I found was using perl to do the encoding/decoding.</p>
+
+<p>After installing nginx, I created the file <code class="language-plaintext highlighter-rouge">/etc/nginx/sites-available/googleadservices-redirect</code>, linked it to the <code class="language-plaintext highlighter-rouge">sites-enabled</code> and used it in a SSL configured nginx instance:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>perl_set $localuri '
+  sub {
+    my $r = shift;
+    my $arg_adurl = $r-&gt;variable("arg_adurl");
+    my $arg_adurl_decoded = $r-&gt;unescape($arg_adurl);
+    return $arg_adurl_decoded
+  }
+';
+
+server {
+  listen 443 ssl default_server;
+  listen [::]:443 ssl default_server;
+
+  ssl_certificate /etc/nginx/ssl/nginx-self-signed.crt;
+  ssl_certificate_key /etc/nginx/ssl/nginx-self-signed.key;
+
+  gzip off;
+
+  server_name www.googleadservices.com;
+
+  return 301 $localuri;
+}
+</code></pre></div></div>
+
+<p>As all redirects are only in local networks, self signed certificates created via openssl were good enough:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl req -x509 -newkey rsa:4096 -days 365 -nodes -keyout /etc/nginx/ssl/nginx-self-signed.key -out /etc/nginx/ssl/nginx-self-signed.crt -subj "/CN=www.googleadservices.com"
+  -addext "subjectAltName=DNS:www.googleadservices.com,DNS:googleadservices.com,IP:192.168.0.250"
+</code></pre></div></div>
+
+<p>On the other side, I only needed to support most modern software, so I restricted encryption options in <code class="language-plaintext highlighter-rouge">/etc/nginx/nginx.conf</code> and enabled the perl module:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
+  perl_modules perl/lib;
+  ...
+  ssl_protocols TLSv1.3;
+  ssl_ecdh_curve X25519:prime256v1:secp384r1;
+  ssl_prefer_server_ciphers on;
+  ...
+}
+</code></pre></div></div>
+
+<p>I redirected the DNS <code class="language-plaintext highlighter-rouge">www.googleadservices.com</code> via Pi-hole to the nginx installation and then I had the necessary redirects working locally. Problem solved.</p>
+</div>
+</div>
+
+
+    </div>
+  </body>
+</html>
+
