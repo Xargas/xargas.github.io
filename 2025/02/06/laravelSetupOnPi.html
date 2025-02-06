@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>
+      
+        Setup Raspberry Pi to serve a Laravel based website &middot; xargas.eu
+      
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/public/style.css">
+    <link rel="stylesheet" href="/public/syntax.css">
+  </head>
+
+  <body>
+    <div class="navbar">
+      <h1>Xargas.eu</h1>
+      <p>Private website to write about my hobbies</p>
+      <a class="navbar-item" href="/">Home</a>
+      
+        <a class="navbar-item" href="/blog/">Blog</a>
+      
+        <a class="navbar-item" href="/3dprint/index.html">3D Printing</a>
+      
+        <a class="navbar-item" href="/3dmodel/index.html">3D Modeling</a>
+      
+        <a class="navbar-item" href="/embeddedsw/index.html">Embedded Software</a>
+      
+      
+        <a class="navbar-item" href="/pages/impressum.html">Impressum</a>
+
+      <p>&copy; 2025. All rights reserved.</p>
+    </div>
+    <div class="content">
+      <div class="post post-entry">
+  <h1 class="post-title">Setup Raspberry Pi to serve a Laravel based website</h1>
+  <span class="post-date">06.02.2025</span>
+  <hr>
+  <div class="post-content"><p>The official website of Laravel has already a <a href="https://laravel.com/docs/11.x">documentation</a> on howto install it on a Linux OS, but it requires to trust the installer script. This would have been run directly on the local machine without prior checking the contents and what is really done.
+Of course I manually checked the install script and did not like what I found. The installed elements would not be tracked by the package manager, it would install another certificate authority list for the local installation. Things I consider non-maintainable or unsafe. So I wanted to go another (more clean?) way on a Raspberry Pi.</p>
+
+<ol>
+  <li>First I needed to install the necessary tools using the commandline.
+    <ul>
+      <li>I wanted to use <code class="language-plaintext highlighter-rouge">nginx</code> to serve the websites.</li>
+      <li>I wanted to use <code class="language-plaintext highlighter-rouge">php-fpm</code> because it is faster than the apache and/or cgi combinations. And of course because it runs on a Raspberry Pi.</li>
+      <li>I needed <code class="language-plaintext highlighter-rouge">composer</code> for php packages.</li>
+    </ul>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aptitude <span class="nb">install </span>nginx php-fpm composer
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>I then configured nginx to serve a new site by adding a file <code class="language-plaintext highlighter-rouge">/etc/nginx/sites-available/laravel-www</code>:</p>
+
+    <div class="language-nginx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">server</span> <span class="p">{</span>
+     <span class="kn">listen</span> <span class="mi">80</span> <span class="s">default_server</span><span class="p">;</span>
+     <span class="kn">listen</span> <span class="s">[::]:80</span> <span class="s">default_server</span><span class="p">;</span>
+
+     <span class="kn">root</span> <span class="n">/var/www/laravel-www</span><span class="p">;</span>
+
+     <span class="kn">index</span> <span class="s">index.html</span> <span class="s">index.php</span><span class="p">;</span>
+
+     <span class="kn">server_name</span> <span class="s">_</span><span class="p">;</span>
+
+     <span class="kn">location</span> <span class="n">/</span> <span class="p">{</span>
+             <span class="c1"># First attempt to serve request as file, then</span>
+             <span class="c1"># as directory, then fall back to displaying a 404.</span>
+             <span class="kn">try_files</span> <span class="nv">$uri</span> <span class="nv">$uri</span><span class="n">/</span> <span class="p">=</span><span class="mi">404</span><span class="p">;</span>
+     <span class="p">}</span>
+
+     <span class="kn">location</span> <span class="p">~</span> <span class="sr">\.php$</span> <span class="p">{</span>
+             <span class="kn">fastcgi_split_path_info</span> <span class="s">^(.+?</span><span class="err">\</span><span class="s">.php)(/.*)</span>$<span class="p">;</span>
+             <span class="kn">try_files</span> <span class="nv">$fastcgi_script_name</span> <span class="p">=</span><span class="mi">404</span><span class="p">;</span>
+             <span class="kn">set</span> <span class="nv">$path_info</span> <span class="nv">$fastcgi_path_info</span><span class="p">;</span>
+             <span class="kn">fastcgi_param</span> <span class="s">PATH_INFO</span> <span class="nv">$path_info</span><span class="p">;</span>
+             <span class="kn">fastcgi_index</span> <span class="s">index.php</span><span class="p">;</span>
+             <span class="kn">include</span> <span class="s">fastcgi.conf</span><span class="p">;</span>
+             <span class="kn">fastcgi_pass</span> <span class="s">unix:/run/php/php-fpm.sock</span><span class="p">;</span>
+     <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+    <p>This already contains the necessary parts for serving on a HTTP server (no SSL here at the moment!) using the installed PHP version.
+I used the version-free <code class="language-plaintext highlighter-rouge">php-fpm</code> symlink so updating/changing to another PHP version is easier later.</p>
+  </li>
+  <li>The site was then activated to be served already, as it was not public on the internet:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">ln</span> <span class="nt">-s</span> /etc/nginx/sites-available/laravel-www /etc/nginx/sites-enabled/laravel-www
+nginx <span class="nt">-s</span> reload
+</code></pre></div>    </div>
+  </li>
+  <li>Now I used <code class="language-plaintext highlighter-rouge">composer</code> to get the basic laravel installation:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> /var/www/
+<span class="nb">mkdir </span>laravel-www
+composer create-project laravel/laravel laravel-www
+</code></pre></div>    </div>
+  </li>
+  <li>For the installation to work, I needed to setup some access rights, as <code class="language-plaintext highlighter-rouge">nginx</code> is running as <code class="language-plaintext highlighter-rouge">www-data</code> user:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">chown</span> <span class="nt">-R</span> www-data.www-data /var/www/laravel-www
+</code></pre></div>    </div>
+  </li>
+  <li>For the Laravel project itself, my first start should used the <code class="language-plaintext highlighter-rouge">sqlite</code> database to just show that the laravel part is working. So I initialized it using the default configurations in the <code class="language-plaintext highlighter-rouge">/var/www/laravel-www/.env</code> file via:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> /var/www/laravel-www
+php artisan migrate
+</code></pre></div>    </div>
+  </li>
+  <li>Now I had the basic laravel project up and running (For later reference: Laravel v11.41.3 (PHP v8.2.7))</li>
+</ol>
+</div>
+</div>
+
+
+    </div>
+  </body>
+</html>
+
