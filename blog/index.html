@@ -69,11 +69,11 @@ The one I found was using perl to do the encoding/decoding.</p>
     <span class="kn">my</span> <span class="nv">$r</span> <span class="p">=</span> <span class="s">shift</span><span class="p">;</span>
     <span class="kn">my</span> <span class="nv">$arg_adurl</span> <span class="p">=</span> <span class="nv">$r-</span><span class="s">&gt;variable("arg_adurl")</span><span class="p">;</span>
     <span class="kn">my</span> <span class="nv">$arg_adurl_decoded</span> <span class="p">=</span> <span class="nv">$r-</span><span class="s">&gt;unescape(</span><span class="nv">$arg_adurl</span><span class="s">)</span><span class="p">;</span>
-    <span class="kn">return</span> <span class="nv">$arg_adurl_decoded</span>
-  <span class="err">}</span>
-<span class="s">'</span><span class="p">;</span>
+    <span class="kn">return</span> <span class="nv">$arg_adurl_decoded</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="k">'</span><span class="p">;</span>
 
-<span class="kn">server</span> <span class="p">{</span>
+<span class="k">server</span> <span class="p">{</span>
   <span class="kn">listen</span> <span class="mi">443</span> <span class="s">ssl</span> <span class="s">default_server</span><span class="p">;</span>
   <span class="kn">listen</span> <span class="s">[::]:443</span> <span class="s">ssl</span> <span class="s">default_server</span><span class="p">;</span>
 
