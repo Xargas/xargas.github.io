@@ -37,6 +37,21 @@
       <div class="blog">
   
     <div class="blog-entry">
+      <h1 class="blog-title"><a href="/2025/02/06/gnuScreenSshLogin.html">Using GNU Screen upon SSH login</a></h1>
+      <span class="blog-date">06.02.2025</span>
+      <hr>
+      <div class="blog-content"><p>Whenever I log into a remote Linux based machine via SSH, I first start a GNU screen session. Any when I forget, I often regret it when I close the session window, as this also terminates the processes I usually want to continue in the background.</p>
+
+<p>To not be able to forget this, I added</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># for SSH sessions which are not already in gnu screen -&gt; attach to a detached one or create a new session</span>
+<span class="k">if</span> <span class="o">[[</span> <span class="o">!</span> <span class="nt">-z</span> <span class="s2">"</span><span class="k">${</span><span class="nv">SSH_CLIENT</span><span class="k">}</span><span class="s2">"</span> <span class="o">&amp;&amp;</span> <span class="nt">-z</span> <span class="s2">"</span><span class="k">${</span><span class="nv">STY</span><span class="k">}</span><span class="s2">"</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then </span>screen <span class="nt">-RR</span><span class="p">;</span> <span class="k">fi</span>
+</code></pre></div></div>
+<p>at the end of <code class="language-plaintext highlighter-rouge">~/.bashrc</code> to automatically reconnect to a previous screen session, or connect to a new screen session if no detached one is available. It does that only for SSH logins and only if the shell is not already inside a screen session (this avoids recursive loops).</p>
+
+</div>
+    </div>
+  
+    <div class="blog-entry">
       <h1 class="blog-title"><a href="/2025/02/05/nginxWithPihole.html">Using nginx combined with Pi-hole to block server site tracking</a></h1>
       <span class="blog-date">05.02.2025</span>
       <hr>
