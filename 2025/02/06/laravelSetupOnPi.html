@@ -61,24 +61,26 @@ Of course I manually checked the install script and did not like what I found. T
 
      <span class="kn">root</span> <span class="n">/var/www/laravel-www</span><span class="p">;</span>
 
-     <span class="kn">index</span> <span class="s">index.html</span> <span class="s">index.php</span><span class="p">;</span>
+     <span class="kn">index</span> <span class="s">index.php</span><span class="p">;</span>
 
      <span class="kn">server_name</span> <span class="s">_</span><span class="p">;</span>
 
+     <span class="kn">charset</span> <span class="s">utf-8</span><span class="p">;</span>
+
      <span class="kn">location</span> <span class="n">/</span> <span class="p">{</span>
-             <span class="c1"># First attempt to serve request as file, then</span>
-             <span class="c1"># as directory, then fall back to displaying a 404.</span>
-             <span class="kn">try_files</span> <span class="nv">$uri</span> <span class="nv">$uri</span><span class="n">/</span> <span class="p">=</span><span class="mi">404</span><span class="p">;</span>
+             <span class="kn">try_files</span> <span class="nv">$uri</span> <span class="nv">$uri</span><span class="n">/</span> <span class="n">/index.php?</span><span class="nv">$query_string</span><span class="p">;</span>
      <span class="p">}</span>
 
+     <span class="kn">location</span> <span class="p">=</span> <span class="n">/favicon.ico</span> <span class="p">{</span> <span class="kn">access_log</span> <span class="no">off</span><span class="p">;</span> <span class="kn">log_not_found</span> <span class="no">off</span><span class="p">;</span> <span class="p">}</span>
+     <span class="kn">location</span> <span class="p">=</span> <span class="n">/robots.txt</span>  <span class="p">{</span> <span class="kn">access_log</span> <span class="no">off</span><span class="p">;</span> <span class="kn">log_not_found</span> <span class="no">off</span><span class="p">;</span> <span class="p">}</span>
+
+     <span class="kn">error_page</span> <span class="mi">404</span> <span class="n">/index.php</span><span class="p">;</span>
+
      <span class="kn">location</span> <span class="p">~</span> <span class="sr">\.php$</span> <span class="p">{</span>
-             <span class="kn">fastcgi_split_path_info</span> <span class="s">^(.+?</span><span class="err">\</span><span class="s">.php)(/.*)</span>$<span class="p">;</span>
-             <span class="kn">try_files</span> <span class="nv">$fastcgi_script_name</span> <span class="p">=</span><span class="mi">404</span><span class="p">;</span>
-             <span class="kn">set</span> <span class="nv">$path_info</span> <span class="nv">$fastcgi_path_info</span><span class="p">;</span>
-             <span class="kn">fastcgi_param</span> <span class="s">PATH_INFO</span> <span class="nv">$path_info</span><span class="p">;</span>
-             <span class="kn">fastcgi_index</span> <span class="s">index.php</span><span class="p">;</span>
-             <span class="kn">include</span> <span class="s">fastcgi.conf</span><span class="p">;</span>
              <span class="kn">fastcgi_pass</span> <span class="s">unix:/run/php/php-fpm.sock</span><span class="p">;</span>
+             <span class="kn">fastcgi_param</span> <span class="s">SCRIPT_FILENAME</span> <span class="nv">$realpath_root$fastcgi_script_name</span><span class="p">;</span>
+             <span class="kn">include</span> <span class="s">fastcgi.conf</span><span class="p">;</span>
+             <span class="kn">fastcgi_hide_header</span> <span class="s">X-Powered-By</span><span class="p">;</span>
      <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>    </div>
