@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>
+      
+        Create GIF from video using ffmpeg &middot; xargas.eu
+      
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/public/style.css">
+    <link rel="stylesheet" href="/public/syntax.css">
+  </head>
+
+  <body>
+    <div class="navbar">
+      <h1>Xargas.eu</h1>
+      <p>Private website to write about my hobbies</p>
+      <a class="navbar-item" href="/">Home</a>
+      
+        <a class="navbar-item" href="/blog/">Blog</a>
+      
+        <a class="navbar-item" href="/3dprint/index.html">3D Printing</a>
+      
+        <a class="navbar-item" href="/3dmodel/index.html">3D Modeling</a>
+      
+        <a class="navbar-item" href="/embeddedsw/index.html">Embedded Software</a>
+      
+      
+        <a class="navbar-item" href="/pages/impressum.html">Impressum</a>
+
+      <p>&copy; 2025. All rights reserved.</p>
+    </div>
+    <div class="content">
+      <div class="post post-entry">
+  <h1 class="post-title">Create GIF from video using ffmpeg</h1>
+  <span class="post-date">18.02.2025</span>
+  <hr>
+  <div class="post-content"><p>After developing code for a new approach for handling parameters in <a href="https://www.freecad.org/">FreeCAD</a> I wanted to present it to other FreeCAD users to get some feedback. Of course, the code is still a prototype, but it is working and shows the intended workflow, so I wanted to know if other people also think something like this is useful.</p>
+
+<p>To present it, I wanted to show a small video, but the forum only allows files up to 1MB. So I wanted to create a small GIF showing the essentials.</p>
+
+<p>To capture the video from the FreeCAD window under Windows I used <a href="https://obsproject.com/">OBS Studio</a> with the FreeCAD window as video source.
+This way I got a <code class="language-plaintext highlighter-rouge">Prototype.mkv</code> video showing the workflow.</p>
+
+<p>Then I converted the video via ffmpeg to get the <code class="language-plaintext highlighter-rouge">Prototype.gif</code> file:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ffmpeg <span class="nt">-ss</span> 2 <span class="nt">-t</span> 50 <span class="nt">-i</span> Prototype.mkv <span class="nt">-vf</span> <span class="s2">"setpts=PTS/2,fps=1,crop=1547:1080:0:0,scale=1024:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse"</span> <span class="nt">-loop</span> 0 Prototype.gif
+</code></pre></div></div>
+
+<p>I applied filtering to get the file size down:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">-ss 2</code> to skip the first two seconds</li>
+  <li><code class="language-plaintext highlighter-rouge">-t 50</code> to convert the next 50 seconds, so the interval that is converted is [2;52] seconds</li>
+  <li><code class="language-plaintext highlighter-rouge">setpts=PTS/2,fps=1</code> to make the GIF 2 times faster then the captured video and have 1 image per second in the GIF</li>
+  <li><code class="language-plaintext highlighter-rouge">crop=1547:1080:0:0,scale=1024:-1:flags=lanczos</code> to crop to the main window, scale the image down to 1024 pixels height to get a smaller file size</li>
+  <li><code class="language-plaintext highlighter-rouge">split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse</code> to split the input to two virtual outputs s0 and s1, where s0 is used to generate the GIF color palette and s1 will use the generated GIF color palette</li>
+  <li><code class="language-plaintext highlighter-rouge">-loop 0</code> to let the GIF loop indefinitely</li>
+</ul>
+
+<p>Now I had everything to create a <a href="https://forum.freecad.org/viewtopic.php?t=94916">post in the FreeCAD forum.</a></p>
+</div>
+</div>
+
+
+    </div>
+  </body>
+</html>
+

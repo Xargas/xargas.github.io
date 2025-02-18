@@ -37,6 +37,36 @@
       <div class="blog">
   
     <div class="blog-entry">
+      <h1 class="blog-title"><a href="/2025/02/18/ffmpegToGif.html">Create GIF from video using ffmpeg</a></h1>
+      <span class="blog-date">18.02.2025</span>
+      <hr>
+      <div class="blog-content"><p>After developing code for a new approach for handling parameters in <a href="https://www.freecad.org/">FreeCAD</a> I wanted to present it to other FreeCAD users to get some feedback. Of course, the code is still a prototype, but it is working and shows the intended workflow, so I wanted to know if other people also think something like this is useful.</p>
+
+<p>To present it, I wanted to show a small video, but the forum only allows files up to 1MB. So I wanted to create a small GIF showing the essentials.</p>
+
+<p>To capture the video from the FreeCAD window under Windows I used <a href="https://obsproject.com/">OBS Studio</a> with the FreeCAD window as video source.
+This way I got a <code class="language-plaintext highlighter-rouge">Prototype.mkv</code> video showing the workflow.</p>
+
+<p>Then I converted the video via ffmpeg to get the <code class="language-plaintext highlighter-rouge">Prototype.gif</code> file:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ffmpeg <span class="nt">-ss</span> 2 <span class="nt">-t</span> 50 <span class="nt">-i</span> Prototype.mkv <span class="nt">-vf</span> <span class="s2">"setpts=PTS/2,fps=1,crop=1547:1080:0:0,scale=1024:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse"</span> <span class="nt">-loop</span> 0 Prototype.gif
+</code></pre></div></div>
+
+<p>I applied filtering to get the file size down:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">-ss 2</code> to skip the first two seconds</li>
+  <li><code class="language-plaintext highlighter-rouge">-t 50</code> to convert the next 50 seconds, so the interval that is converted is [2;52] seconds</li>
+  <li><code class="language-plaintext highlighter-rouge">setpts=PTS/2,fps=1</code> to make the GIF 2 times faster then the captured video and have 1 image per second in the GIF</li>
+  <li><code class="language-plaintext highlighter-rouge">crop=1547:1080:0:0,scale=1024:-1:flags=lanczos</code> to crop to the main window, scale the image down to 1024 pixels height to get a smaller file size</li>
+  <li><code class="language-plaintext highlighter-rouge">split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse</code> to split the input to two virtual outputs s0 and s1, where s0 is used to generate the GIF color palette and s1 will use the generated GIF color palette</li>
+  <li><code class="language-plaintext highlighter-rouge">-loop 0</code> to let the GIF loop indefinitely</li>
+</ul>
+
+<p>Now I had everything to create a <a href="https://forum.freecad.org/viewtopic.php?t=94916">post in the FreeCAD forum.</a></p>
+</div>
+    </div>
+  
+    <div class="blog-entry">
       <h1 class="blog-title"><a href="/2025/02/06/laravelSetupOnPi.html">Setup Raspberry Pi to serve a Laravel based website</a></h1>
       <span class="blog-date">06.02.2025</span>
       <hr>
@@ -201,38 +231,6 @@ Searching for a solution I found that modern bash is capable of using unicode. S
 <p>Example:</p>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">PS1</span><span class="o">=</span><span class="s1">'${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\] 🪟:\[\033[01;34m\]\w\[\033[00m\]\$ '</span>
 </code></pre></div></div>
-</div>
-    </div>
-  
-    <div class="blog-entry">
-      <h1 class="blog-title"><a href="/2025/01/23/buildFreeCAD.html">Building FreeCAD on Windows</a></h1>
-      <span class="blog-date">23.01.2025</span>
-      <hr>
-      <div class="blog-content"><p>I wanted to build FreeCAD on Windows to be able to do some local development. FreeCAD is already documented for this in the <a href="https://wiki.freecad.org/Compile_on_Windows">FreeCAD wiki</a>. The steps are very clear, but I found some inconsistencies regarding paths and order of mentioned information. Maybe I have the option to change them in the wiki later.
-For now, I wanted a complete but very compact step-by-step file to go from “nothing” to “FreeCAD is built”.</p>
-
-<p>I am writing this as the FreeCAD 1.1.0dev version is in development. The following steps were those I needed:</p>
-
-<ol>
-  <li>Get the <a href="https://visualstudio.microsoft.com/">Visual Studio Installer</a> and install the “Visual Studio Build Tools 2022” (version 17.12.4).</li>
-  <li>Get <a href="https://git-scm.com/">Git for windows</a> and install (version 2.48.1). It should be available on the system PATH.</li>
-  <li>Get <a href="https://cmake.org/download/">Cmake</a> and install (version 3.31.4). It should be available on the system PATH.</li>
-  <li>Download the matching <a href="https://github.com/FreeCAD/FreeCAD-LibPack/releases">LibPack release</a> for FreeCAD and extract it somewhere (I put it at “C:/_public/GitHub/LibPack-1.1.0-v3.1.0-Release”).</li>
-  <li>Clone the FreeCAD repository (I put it at “C:/_public/GitHub/FreeCAD”).<br />
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone <span class="nt">--recurse-submodules</span> https://github.com/FreeCAD/FreeCAD.git
-</code></pre></div>    </div>
-  </li>
-  <li>Open a terminal and do the basic cmake configuration via<br />
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cmake <span class="nt">-S</span> C:/_public/GitHub/FreeCAD <span class="nt">-B</span> C:/_public/GitHub/FreeCAD/build/release <span class="nt">-G</span> <span class="s2">"Visual Studio 17 2022"</span> <span class="nt">-DFREECAD_LIBPACK_DIR</span>:PATH<span class="o">=</span><span class="s2">"C:/_public/GitHub/LibPack-1.1.0-v3.1.0-Release"</span> <span class="nt">-DFREECAD_COPY_LIBPACK_BIN_TO_BUILD</span>:BOOL<span class="o">=</span><span class="s2">"1"</span> <span class="nt">-DFREECAD_COPY_DEPEND_DIRS_TO_BUILD</span>:BOOL<span class="o">=</span><span class="s2">"1"</span> <span class="nt">-DFREECAD_COPY_PLUGINS_BIN_TO_BUILD</span>:BOOL<span class="o">=</span><span class="s2">"1"</span>
-</code></pre></div>    </div>
-  </li>
-  <li>Build FreeCAD from command line via<br />
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cmake <span class="nt">--build</span> C:/_public/GitHub/FreeCAD/build/release <span class="nt">--config</span> Release
-</code></pre></div>    </div>
-  </li>
-  <li>After some time, the build finished and let me start FreeCAD.exe (In my case “C:/_public/GitHub/FreeCAD/build/release/bin/FreeCAD.exe”).</li>
-</ol>
-
 </div>
     </div>
   

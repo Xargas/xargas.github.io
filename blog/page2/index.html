@@ -37,6 +37,38 @@
       <div class="blog">
   
     <div class="blog-entry">
+      <h1 class="blog-title"><a href="/2025/01/23/buildFreeCAD.html">Building FreeCAD on Windows</a></h1>
+      <span class="blog-date">23.01.2025</span>
+      <hr>
+      <div class="blog-content"><p>I wanted to build FreeCAD on Windows to be able to do some local development. FreeCAD is already documented for this in the <a href="https://wiki.freecad.org/Compile_on_Windows">FreeCAD wiki</a>. The steps are very clear, but I found some inconsistencies regarding paths and order of mentioned information. Maybe I have the option to change them in the wiki later.
+For now, I wanted a complete but very compact step-by-step file to go from “nothing” to “FreeCAD is built”.</p>
+
+<p>I am writing this as the FreeCAD 1.1.0dev version is in development. The following steps were those I needed:</p>
+
+<ol>
+  <li>Get the <a href="https://visualstudio.microsoft.com/">Visual Studio Installer</a> and install the “Visual Studio Build Tools 2022” (version 17.12.4).</li>
+  <li>Get <a href="https://git-scm.com/">Git for windows</a> and install (version 2.48.1). It should be available on the system PATH.</li>
+  <li>Get <a href="https://cmake.org/download/">Cmake</a> and install (version 3.31.4). It should be available on the system PATH.</li>
+  <li>Download the matching <a href="https://github.com/FreeCAD/FreeCAD-LibPack/releases">LibPack release</a> for FreeCAD and extract it somewhere (I put it at “C:/_public/GitHub/LibPack-1.1.0-v3.1.0-Release”).</li>
+  <li>Clone the FreeCAD repository (I put it at “C:/_public/GitHub/FreeCAD”).<br />
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone <span class="nt">--recurse-submodules</span> https://github.com/FreeCAD/FreeCAD.git
+</code></pre></div>    </div>
+  </li>
+  <li>Open a terminal and do the basic cmake configuration via<br />
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cmake <span class="nt">-S</span> C:/_public/GitHub/FreeCAD <span class="nt">-B</span> C:/_public/GitHub/FreeCAD/build/release <span class="nt">-G</span> <span class="s2">"Visual Studio 17 2022"</span> <span class="nt">-DFREECAD_LIBPACK_DIR</span>:PATH<span class="o">=</span><span class="s2">"C:/_public/GitHub/LibPack-1.1.0-v3.1.0-Release"</span> <span class="nt">-DFREECAD_COPY_LIBPACK_BIN_TO_BUILD</span>:BOOL<span class="o">=</span><span class="s2">"1"</span> <span class="nt">-DFREECAD_COPY_DEPEND_DIRS_TO_BUILD</span>:BOOL<span class="o">=</span><span class="s2">"1"</span> <span class="nt">-DFREECAD_COPY_PLUGINS_BIN_TO_BUILD</span>:BOOL<span class="o">=</span><span class="s2">"1"</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Build FreeCAD from command line via<br />
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cmake <span class="nt">--build</span> C:/_public/GitHub/FreeCAD/build/release <span class="nt">--config</span> Release
+</code></pre></div>    </div>
+  </li>
+  <li>After some time, the build finished and let me start FreeCAD.exe (In my case “C:/_public/GitHub/FreeCAD/build/release/bin/FreeCAD.exe”).</li>
+</ol>
+
+</div>
+    </div>
+  
+    <div class="blog-entry">
       <h1 class="blog-title"><a href="/2025/01/22/start.html">xargas.eu goes online</a></h1>
       <span class="blog-date">22.01.2025</span>
       <hr>
