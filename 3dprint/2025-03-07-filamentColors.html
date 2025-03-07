@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>
+      
+        Filament colors &middot; xargas.eu
+      
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/public/style.css">
+    <link rel="stylesheet" href="/public/syntax.css">
+  </head>
+
+  <body>
+    <div class="navbar">
+      <h1>Xargas.eu</h1>
+      <p>Private website to write about my hobbies</p>
+      <a class="navbar-item" href="/">Home</a>
+      
+        <a class="navbar-item" href="/blog/">Blog</a>
+      
+        <a class="navbar-item" href="/3dprint/index.html">3D Printing</a>
+      
+        <a class="navbar-item" href="/3dmodel/index.html">3D Modeling</a>
+      
+        <a class="navbar-item" href="/embeddedsw/index.html">Embedded Software</a>
+      
+      
+        <a class="navbar-item" href="/pages/impressum.html">Impressum</a>
+
+      <p>&copy; 2025. All rights reserved.</p>
+    </div>
+    <div class="content">
+      <div class="page">
+  <h1 class="page-title">Filament colors</h1>
+  <span class="page-date">07.03.2025</span>
+  <p>I found that selecting the right filament color when ordering new filament is not an easy task.
+This might be the reason for people using filament sample prints. And I also decided to print those and store them <a href="https://www.printables.com/make/1932184">protected from light</a>.
+There are also some manufacturers which already <a href="https://www.3djake.at/bambu-lab/bambu-filament-swatches">sell those color samples</a>.
+What I wanted is something that would make producing too many of those unnecessary because of a color reference.</p>
+
+<p>Digging into that topic I found that using a color checker board can achieve this. Of course I needed to do RAW photography to get good results.
+So I used my DSLR, installed <a href="https://www.rawtherapee.com/">rawtherapee</a> and started my first approach, which I am documenting here.</p>
+
+<p>I took the pictures on a blue carton with fixed settings (ISO 400, 1/40s, f/4) in JPG+RAW mode.</p>
+
+<p>Then I opened the RAW images in Rawtherapee where I started from the “(Neutral)” profile. From there I change the following Tabs/Settings:</p>
+<ul>
+  <li>Transform → Lens / Geometry
+    <ul>
+      <li>Lens profile → Automatically selected: my lense is present in the Rawtherapee profiles (Folder: RawTherapee\5.11\share\lensfun)</li>
+      <li>Correct → Geometric distortion: enabled</li>
+      <li>Correct → Chromatic aberration: enabled</li>
+    </ul>
+  </li>
+  <li>Color → Color Management
+    <ul>
+      <li>Input Profile: Auto-matched camera profile: my camera is present in the Rawtherapee profiles (Folder: RawTherapee\5.11\dcpprofiles)</li>
+      <li>White Balance: Pick a 32x32 area with the grey midpoint. This is the element “021” on the color checker board</li>
+    </ul>
+  </li>
+</ul>
+
+<p>With these steps I got the images which give some kind of “absolute color reference for the described filament”.
+If I have time I will go into a more detailed color matching by not using just the white balance, but also RGB and HSV curves to match the other colors of the color checker in more detail.</p>
+
+<p>Filament colors:</p>
+
+<p><img src="/img/filamentColors/white.jpg" alt="White filaments" />
+<img src="/img/filamentColors/yellow_orange.jpg" alt="Yellow and orange filaments" />
+<img src="/img/filamentColors/red_purple.jpg" alt="Red and purple filaments" />
+<img src="/img/filamentColors/brown.jpg" alt="Brown filaments" />
+<img src="/img/filamentColors/green.jpg" alt="Green filaments" />
+<img src="/img/filamentColors/blue.jpg" alt="Blue filaments" />
+<img src="/img/filamentColors/grey_black.jpg" alt="Grey and black filaments" /></p>
+
+</div>
+
+    </div>
+  </body>
+</html>
+
