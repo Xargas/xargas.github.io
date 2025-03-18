@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>
+      
+        Country as 3D model &middot; xargas.eu
+      
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/public/style.css">
+    <link rel="stylesheet" href="/public/syntax.css">
+  </head>
+
+  <body>
+    <div class="navbar">
+      <h1>Xargas.eu</h1>
+      <p>Private website to write about my hobbies</p>
+      <a class="navbar-item" href="/">Home</a>
+      
+        <a class="navbar-item" href="/blog/">Blog</a>
+      
+        <a class="navbar-item" href="/3dprint/index.html">3D Printing</a>
+      
+        <a class="navbar-item" href="/3dmodel/index.html">3D Modeling</a>
+      
+        <a class="navbar-item" href="/embeddedsw/index.html">Embedded Software</a>
+      
+      
+        <a class="navbar-item" href="/pages/impressum.html">Impressum</a>
+
+      <p>&copy; 2025. All rights reserved.</p>
+    </div>
+    <div class="content">
+      <div class="page">
+  <h1 class="page-title">Country as 3D model</h1>
+  <span class="page-date">Last Update: 18.03.2025</span>
+  <p>While creating some 3D models, I wanted to have a model of the country I live in, so I can print a landscape version of it.
+It should be detailed enough to be used for SLA printing, but also suitable for FDM printing.</p>
+
+<p>Starting from this thought I searched for possible sources of geometrical data for countries. The key here is the right keyword, namely GIS (geographic information system). With this I found the open source tool <a href="https://qgis.org/">QGIS</a>. This let me load, view and edit geographic data.</p>
+
+<p>The GIS data I found most usable at the moment is the <a href="https://www.usgs.gov/coastal-changes-and-impacts/gmted2010">GMTED2010</a>, which has various data grids available for <a href="https://topotools.cr.usgs.gov/gmted_viewer/gmted2010_global_grids.php">download</a>.</p>
+
+<p>To be able to limit the data to the country I wanted, I needed to get the border of the country in geographical form. This I found at <a href="https://gadm.org/">GADM</a>.</p>
+
+<h2 id="manual-steps">Manual steps</h2>
+
+<p>Now I had everything I needed to create the first 3D model based in the data with QGIS by hand.
+So, in QGIS I started from an empty project and added the first Layer via <code class="language-plaintext highlighter-rouge">Layer -&gt; Add Layer -&gt; Add Raster Layer</code> and selected the file <code class="language-plaintext highlighter-rouge">ds75_grd\prj.adf</code> as data source. I selected this as it did the systematic subsampling of the data but still had a resolution of 7.5 arc-seconds. To get a better feeling for this number: Earth’s diameter is about <math><mn>D</mn><mo>=</mo><mn>12756 km</mn></math>, so on an ideal sphere the <math><mn>&alpha;</mn><mo>=</mo><mn>0° 0' 7.5''</mn></math> would be</p>
+<math>
+  <mn>D &pi;</mn>
+  <mfrac>
+    <mn>&alpha;</mn>
+    <mn>360°</mn>
+  </mfrac>
+  <mo>=</mo>
+  <mn>232 m</mn>
+</math>
+<p>Thus, a height information change every 232 m.</p>
+
+<p>The second layer I needed to add is the country layer. Again via menu, but this time <code class="language-plaintext highlighter-rouge">Layer -&gt; Add Layer -&gt; Add Vector Layer</code> with the file <code class="language-plaintext highlighter-rouge">gadm_410-levels.gpkg</code>. From the levels in this container, I only imported the <code class="language-plaintext highlighter-rouge">ADM_0</code> to only get the country borders.</p>
+
+<p>To extract only the height information for the country I wanted I needed a layer which contains the border information.
+So, I first selected the layer containing all borders in the tree view, then activated the feature selection mode via  <code class="language-plaintext highlighter-rouge">Edit -&gt; Select -&gt; Select Feature(s)</code> and got this view:</p>
+
+<p><img src="/img/countryAs3dModel/ScreenshotQgisSelect.png" alt="Qgis Selected Feature" /></p>
+
+<p>From here I created a new layer from this feature via <code class="language-plaintext highlighter-rouge">Edit -&gt; Copy Features</code> and <code class="language-plaintext highlighter-rouge">Edit -&gt; Paste Features As -&gt; New Vector Layer ...</code>.</p>
+
+<p>With <code class="language-plaintext highlighter-rouge">Raster -&gt; Extraction -&gt; Clip Raster by Mask Layer</code> the raster layer (as input) and the new created vector layer (as mask) can be combined:</p>
+
+<p><img src="/img/countryAs3dModel/ScreenshotQgisExtract.png" alt="Qgis Feature Extraction" /></p>
+
+<p>With this, the desired information I wanted is available and only needed to be exported to a 3D model:</p>
+
+<p><img src="/img/countryAs3dModel/ScreenshotQgisReady.png" alt="Qgis Feature Extracted" /></p>
+
+<p>From here I proceeded using the <a href="https://plugins.qgis.org/plugins/DEMto3D/">DEMto3D Plugin</a>. After installation it was available in the menu <code class="language-plaintext highlighter-rouge">Raster -&gt; DEMto3D -&gt; DEM 3D printing</code>. The plugin allowed me to export the raster layer as STL file, a file perfectly suitable for 3D printing. In the dialog I selected the clipped layer to export, clicked the button “Select full extent” in the “Layer extent” section and filled the rest with meaningful values for 3D printing:</p>
+
+<p><img src="/img/countryAs3dModel/ScreenshotExport.png" alt="Qgis Export 3D STL File" /></p>
+
+<p>So, I got a 3D printable model as this screenshot from the slicer shows:</p>
+
+<p><img src="/img/countryAs3dModel/ScreenshotSlicer.png" alt="3D Model in Slicer" /></p>
+
+<h2 id="automated-script">Automated script</h2>
+
+<p>After a while I though, what if the data sources would be updated and/or I want more than one country as 3D model. So, I made myself familiar with automatization option using QGIS. I found that Python scripting is available.</p>
+
+<p>Using the above manual steps, I knew and the API documentation I came up with the following script to automatically create STL files for all countries (features) in a vector layer. I prepared a file <code class="language-plaintext highlighter-rouge">world.qgz</code> with the layers containing the vector and raster information that should be processed and a temporary layer for the processing step. As the template was fixed, I hardcoded the layer names into the script. In case this is different when you want to use parts of the script, just inspect the <code class="language-plaintext highlighter-rouge">layers</code> variable in the Python console to get the names.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">qgis.core</span> <span class="kn">import</span> <span class="n">QgsProject</span>
+
+<span class="kn">from</span> <span class="n">DEMto3D.model_builder.Model_Builder</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">from</span> <span class="n">DEMto3D.model_builder.STL_Builder</span> <span class="kn">import</span> <span class="n">STL</span>
+<span class="kn">from</span> <span class="n">DEMto3D.DEMto3D_Dialog.DEMto3D_dialog</span> <span class="kn">import</span> <span class="n">DEMto3DDialog</span>
+
+<span class="n">folder</span> <span class="o">=</span> <span class="sh">'</span><span class="s">C:/EarthData/</span><span class="sh">'</span>
+
+<span class="n">project</span> <span class="o">=</span> <span class="n">QgsProject</span><span class="p">.</span><span class="nf">instance</span><span class="p">()</span>
+<span class="n">project</span><span class="p">.</span><span class="nf">read</span><span class="p">(</span><span class="n">folder</span> <span class="o">+</span> <span class="sh">'</span><span class="s">world.qgz</span><span class="sh">'</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">project</span><span class="p">.</span><span class="nf">fileName</span><span class="p">())</span>
+
+<span class="n">layers</span> <span class="o">=</span> <span class="n">QgsProject</span><span class="p">.</span><span class="nf">instance</span><span class="p">().</span><span class="nf">mapLayers</span><span class="p">()</span>
+
+<span class="n">layer_countries</span> <span class="o">=</span> <span class="n">layers</span><span class="p">[</span><span class="sh">'</span><span class="s">ADM_0_00ad0572_6e12_4aa6_91ae_896ff87f6b33</span><span class="sh">'</span><span class="p">]</span>
+<span class="n">layer_federalStates</span> <span class="o">=</span> <span class="n">layers</span><span class="p">[</span><span class="sh">'</span><span class="s">ADM_1_8a857091_b016_43fe_b612_c3c3d16eb4c2</span><span class="sh">'</span><span class="p">]</span>
+<span class="n">layer_tmp</span> <span class="o">=</span> <span class="n">layers</span><span class="p">[</span><span class="sh">'</span><span class="s">tmpLayer_13e50322_8049_4b91_b092_d21a2087722f</span><span class="sh">'</span><span class="p">]</span>
+<span class="n">layer_geom</span> <span class="o">=</span> <span class="n">layers</span><span class="p">[</span><span class="sh">'</span><span class="s">ds75_grd_17e45c11_dd82_4ffb_841c_d347b36b28c2</span><span class="sh">'</span><span class="p">]</span>
+
+
+<span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">layer_countries</span><span class="p">.</span><span class="nf">getFeatures</span><span class="p">():</span>
+    <span class="c1"># print country that is currently processed:
+</span>    <span class="n">countryName</span> <span class="o">=</span> <span class="n">feature</span><span class="p">.</span><span class="nf">attribute</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="nf">print</span><span class="p">(</span><span class="n">countryName</span><span class="p">)</span>
+    <span class="c1"># Extract feature to separate VectorLayer
+</span>    <span class="n">cur_dataProvider</span> <span class="o">=</span> <span class="n">layer_tmp</span><span class="p">.</span><span class="nf">dataProvider</span><span class="p">()</span>
+    <span class="n">cur_dataProvider</span><span class="p">.</span><span class="nf">truncate</span><span class="p">()</span>
+    <span class="n">cur_dataProvider</span><span class="p">.</span><span class="nf">addFeature</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+    
+    <span class="c1"># Menu: "Raster -&gt; Extraction -&gt; Clip Raster by Mask Layer"
+</span>    <span class="n">result</span> <span class="o">=</span> <span class="n">processing</span><span class="p">.</span><span class="nf">run</span><span class="p">(</span><span class="sh">"</span><span class="s">gdal:cliprasterbymasklayer</span><span class="sh">"</span><span class="p">,</span>
+      <span class="p">{</span>
+        <span class="sh">'</span><span class="s">INPUT</span><span class="sh">'</span><span class="p">:</span> <span class="n">layer_geom</span><span class="p">.</span><span class="nf">dataProvider</span><span class="p">().</span><span class="nf">dataSourceUri</span><span class="p">(),</span>
+        <span class="sh">'</span><span class="s">MASK</span><span class="sh">'</span><span class="p">:</span> <span class="n">layer_tmp</span><span class="p">.</span><span class="nf">dataProvider</span><span class="p">().</span><span class="nf">dataSourceUri</span><span class="p">(),</span>
+        <span class="sh">'</span><span class="s">SOURCE_CRS</span><span class="sh">'</span><span class="p">:</span><span class="bp">None</span><span class="p">,</span><span class="sh">'</span><span class="s">TARGET_CRS</span><span class="sh">'</span><span class="p">:</span><span class="bp">None</span><span class="p">,</span><span class="sh">'</span><span class="s">TARGET_EXTENT</span><span class="sh">'</span><span class="p">:</span><span class="bp">None</span><span class="p">,</span><span class="sh">'</span><span class="s">NODATA</span><span class="sh">'</span><span class="p">:</span><span class="bp">None</span><span class="p">,</span><span class="sh">'</span><span class="s">ALPHA_BAND</span><span class="sh">'</span><span class="p">:</span><span class="bp">False</span><span class="p">,</span>
+        <span class="sh">'</span><span class="s">CROP_TO_CUTLINE</span><span class="sh">'</span><span class="p">:</span><span class="bp">True</span><span class="p">,</span><span class="sh">'</span><span class="s">KEEP_RESOLUTION</span><span class="sh">'</span><span class="p">:</span><span class="bp">False</span><span class="p">,</span><span class="sh">'</span><span class="s">SET_RESOLUTION</span><span class="sh">'</span><span class="p">:</span><span class="bp">False</span><span class="p">,</span><span class="sh">'</span><span class="s">X_RESOLUTION</span><span class="sh">'</span><span class="p">:</span><span class="bp">None</span><span class="p">,</span>
+        <span class="sh">'</span><span class="s">Y_RESOLUTION</span><span class="sh">'</span><span class="p">:</span><span class="bp">None</span><span class="p">,</span><span class="sh">'</span><span class="s">MULTITHREADING</span><span class="sh">'</span><span class="p">:</span><span class="bp">False</span><span class="p">,</span><span class="sh">'</span><span class="s">OPTIONS</span><span class="sh">'</span><span class="p">:</span><span class="sh">''</span><span class="p">,</span><span class="sh">'</span><span class="s">DATA_TYPE</span><span class="sh">'</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="sh">'</span><span class="s">EXTRA</span><span class="sh">'</span><span class="p">:</span><span class="sh">''</span><span class="p">,</span>
+        <span class="sh">'</span><span class="s">OUTPUT</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">TEMPORARY_OUTPUT</span><span class="sh">'</span>
+      <span class="p">}</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># add the created layer to the project
+</span>    <span class="n">rasterLayer</span> <span class="o">=</span> <span class="n">iface</span><span class="p">.</span><span class="nf">addRasterLayer</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="sh">'</span><span class="s">OUTPUT</span><span class="sh">'</span><span class="p">],</span> <span class="sh">'</span><span class="s">clippedLayer</span><span class="sh">'</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># export STL
+</span>        <span class="n">dlg</span> <span class="o">=</span> <span class="nc">DEMto3DDialog</span><span class="p">(</span><span class="n">iface</span><span class="p">)</span>
+        <span class="c1"># dlg.show()
+</span>        <span class="n">dlg</span><span class="p">.</span><span class="n">layer</span> <span class="o">=</span> <span class="n">rasterLayer</span>
+        <span class="n">dlg</span><span class="p">.</span><span class="nf">full_extent</span><span class="p">()</span>
+        <span class="n">dlg</span><span class="p">.</span><span class="n">ui</span><span class="p">.</span><span class="n">SpacingLineEdit</span><span class="p">.</span><span class="nf">setText</span><span class="p">(</span><span class="sh">'</span><span class="s">0.2</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">dlg</span><span class="p">.</span><span class="n">ui</span><span class="p">.</span><span class="n">WidthLineEdit</span><span class="p">.</span><span class="nf">setText</span><span class="p">(</span><span class="sh">'</span><span class="s">100</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">dlg</span><span class="p">.</span><span class="n">ui</span><span class="p">.</span><span class="n">WidthLineEdit</span><span class="p">.</span><span class="n">textEdited</span><span class="p">.</span><span class="nf">emit</span><span class="p">(</span><span class="sh">""</span><span class="p">)</span>
+        <span class="n">dlg</span><span class="p">.</span><span class="n">ui</span><span class="p">.</span><span class="n">BaseHeightLineEdit</span><span class="p">.</span><span class="nf">setText</span><span class="p">(</span><span class="sh">'</span><span class="s">5</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">dlg</span><span class="p">.</span><span class="n">ui</span><span class="p">.</span><span class="n">BaseModellineEdit</span><span class="p">.</span><span class="nf">setText</span><span class="p">(</span><span class="sh">'</span><span class="s">0</span><span class="sh">'</span><span class="p">)</span>
+        
+        <span class="n">parameters</span> <span class="o">=</span> <span class="n">dlg</span><span class="p">.</span><span class="nf">get_parameters</span><span class="p">()</span>
+        
+        <span class="n">stl_filename</span> <span class="o">=</span> <span class="sh">"</span><span class="s">{0}{1:03d}_{2}.stl</span><span class="sh">"</span><span class="p">.</span><span class="nf">format</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">countryName</span><span class="p">)</span>
+        <span class="nf">print</span><span class="p">(</span><span class="n">stl_filename</span><span class="p">)</span>
+        
+        <span class="n">model</span> <span class="o">=</span> <span class="nc">Model</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
+        <span class="n">model</span><span class="p">.</span><span class="nf">run</span><span class="p">()</span>
+        <span class="n">dem_matrix</span> <span class="o">=</span> <span class="n">model</span><span class="p">.</span><span class="nf">get_model</span><span class="p">()</span>
+        <span class="n">stl</span> <span class="o">=</span> <span class="nc">STL</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">stl_filename</span><span class="p">,</span> <span class="n">dem_matrix</span><span class="p">)</span>
+        <span class="n">stl</span><span class="p">.</span><span class="nf">run</span><span class="p">()</span>
+    <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="n">ex</span><span class="p">)</span>
+        
+    <span class="c1"># cleanup this iteration
+</span>    <span class="n">project</span><span class="p">.</span><span class="nf">removeMapLayer</span><span class="p">(</span><span class="n">rasterLayer</span><span class="p">)</span>
+    
+    <span class="c1"># prepare for next iteration
+</span>    <span class="n">n</span> <span class="o">=</span> <span class="n">n</span><span class="o">+</span><span class="mi">1</span>
+</code></pre></div></div>
+
+<p>Have fun!</p>
+
+</div>
+
+    </div>
+  </body>
+</html>
+
