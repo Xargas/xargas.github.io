@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>
+      
+        World as 3D model &middot; xargas.eu
+      
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/public/style.css">
+    <link rel="stylesheet" href="/public/syntax.css">
+  </head>
+
+  <body>
+    <div class="navbar">
+      <h1>Xargas.eu</h1>
+      <p>Private website to write about my hobbies</p>
+      <a class="navbar-item" href="/">Home</a>
+      
+        <a class="navbar-item" href="/blog/">Blog</a>
+      
+        <a class="navbar-item" href="/3dprint/index.html">3D Printing</a>
+      
+        <a class="navbar-item" href="/3dmodel/index.html">3D Modeling</a>
+      
+        <a class="navbar-item" href="/embeddedsw/index.html">Embedded Software</a>
+      
+      
+        <a class="navbar-item" href="/pages/impressum.html">Impressum</a>
+
+      <p>&copy; 2025. All rights reserved.</p>
+    </div>
+    <div class="content">
+      <div class="page">
+  <h1 class="page-title">World as 3D model</h1>
+  <span class="page-date">Last Update: 26.03.2025</span>
+  <p>Using a resin printer I wanted to create a model of earth, as detailed as possible, printed in reasonable time.
+3D models I found only were mostly in a very rough resolution. Some that were detailed also included the height information from the seas, which I did not want to be shown in the print.</p>
+
+<p>So I got my hands onto the GIS data from <a href="https://www.usgs.gov/coastal-changes-and-impacts/gmted2010">GMTED2010</a> again and created a 3D model using <a href="https://qgis.org/">QGIS</a> and <a href="https://www.blender.org/">Blender</a>.</p>
+
+<h2 id="export-a-height-map-from-gis-data">Export a height map from GIS data</h2>
+
+<p>In QGIS I imported the GMTED2010 data using the <code class="language-plaintext highlighter-rouge">ds75_grd</code> variant as raster layer in a new project using <code class="language-plaintext highlighter-rouge">Layer -&gt; Add Layer -&gt; Add Raster Layer ...</code> and selecting the <code class="language-plaintext highlighter-rouge">ds75_grd/prj.adf</code> as source.</p>
+
+<p>Then I opened up the context menu on this imported layer, to go to <code class="language-plaintext highlighter-rouge">Export -&gt; Save As ...</code> and export a height map as GeoTIFF file. A GeoTIFF file is still a TIFF file, so it can be used as height map.</p>
+
+<p><img src="/img/worldAs3dModel/qgisExportSettings.png" alt="Qgis Export GeoTIFF" /></p>
+
+<p>With this I had a plane image of earth with height information and could move to the 3D modelling part.</p>
+
+<h2 id="create-the-base-plane-3d-model-using-blender">Create the base (plane) 3D model using Blender</h2>
+
+<p>To map a plane on a sphere I needed to do the reverse coordinate transformation as usually done for GIS data.
+So, I started Blender, delete everything in the initial setup (Hint: <code class="language-plaintext highlighter-rouge">a</code>, <code class="language-plaintext highlighter-rouge">x</code>, delete) and created a plane (<code class="language-plaintext highlighter-rouge">Shift+A</code>, Plane). Then I switched to Edit Mode (<code class="language-plaintext highlighter-rouge">Tab</code>) and subdivided the mesh 100x to get a higher resolution (Menu: <code class="language-plaintext highlighter-rouge">Edge -&gt; Subdivide</code>, set <code class="language-plaintext highlighter-rouge">Number of Cuts</code> to 100). Then I subdivided the whole mesh again 10x. So, I now had a reasonable high dense plane to apply the height map to.</p>
+
+<p>To get the height information to the mesh I switched back to Object Mode (<code class="language-plaintext highlighter-rouge">Tab</code>) and added a <code class="language-plaintext highlighter-rouge">Displace</code> modifier to the plane. There I create a new texture by clicking on <code class="language-plaintext highlighter-rouge">New</code> besides the texture icon and opened the TIFF file I created before.</p>
+
+<p><img src="/img/worldAs3dModel/blenderDisplaceModifier.png" alt="Blender Displace Modifier" /></p>
+
+<p>This gave me the basic mesh I wanted, but the height displacement was not as high as I wanted it:</p>
+
+<p><img src="/img/worldAs3dModel/planeWithDisplaceModifier.png" alt="Blender Plane with Modifier" /></p>
+
+<p>So, I increased the <code class="language-plaintext highlighter-rouge">Strength</code> in the displace modifier to 2.</p>
+
+<h2 id="create-the-sphere-based-on-the-plane-3d-model-using-blender">Create the sphere based on the plane 3D model using Blender</h2>
+
+<p>Using the displaced plane the next step is to apply the displacement, so the mesh is fixed for the following geometrical transformations.</p>
+
+<p><img src="/img/worldAs3dModel/blenderApplyModifier.png" alt="Blender Apply Modifier" /></p>
+
+<p>Now the plane can be transformed to a sphere using the <code class="language-plaintext highlighter-rouge">Warp</code> transformation. To do this I first switched to Edit Mode of the plane and selected all vertices (Hint: <code class="language-plaintext highlighter-rouge">a</code>). Then I moved all vertices up the Z axis by <code class="language-plaintext highlighter-rouge">1</code> (the radius of the sphere, Hint: <code class="language-plaintext highlighter-rouge">g</code>, <code class="language-plaintext highlighter-rouge">z</code>, <code class="language-plaintext highlighter-rouge">1</code>, enter).</p>
+
+<p>The next steps are two warp transformations, which must be done in correct order to not distort the geometry. The height map has information from “left-to-right” of 360 degrees and from “top-to-bottom” of the map of 180 degrees. This defines the warps needed to get the sphere.</p>
+
+<p>First, I aligned the viewport so that I view the “top-to-bottom” line from the side. In my case this was the “Right Orthographic” view (Hint: <code class="language-plaintext highlighter-rouge">3</code>).
+Still in Edit Mode and all vertices selected I did the first warp in the menu (<code class="language-plaintext highlighter-rouge">Mesh -&gt; Transform -&gt; Warp</code>) and set the angle to 180 degrees.</p>
+
+<p><img src="/img/worldAs3dModel/blenderMeshWarp1.png" alt="Blender Warp" /></p>
+
+<p>From here I switched/rotate my view to the “left-to-right” side, so the “Front Orthographic” view (Hint: <code class="language-plaintext highlighter-rouge">1</code>). From here I created the second warp via the menu and set the angle to the now corresponding angle of 360 degrees. After switching back to object mode, I now had a nice 3D mesh model of earth.</p>
+
+<p><img src="/img/worldAs3dModel/blenderEarthModel.png" alt="Blender Earth Mesh" /></p>
+
+<p>I used this model to print a small 3cm diameter resin sphere and published it on printables: <a href="https://www.printables.com/model/1244280-detailed-earth-model-from-gis-data">3D Model</a></p>
+
+</div>
+
+    </div>
+  </body>
+</html>
+
