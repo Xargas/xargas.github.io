@@ -14,8 +14,8 @@
   <url><loc>https://xargas.eu/3dprint/2025-04-30-AnycubicKobra3MaxPowerConsumption.html</loc></url>
   <url><loc>https://xargas.eu/3dprint/index.html</loc></url>
   
+  <url><loc>https://xargas.eu/embeddedsw/2025-03-18-platformio_boards.html</loc></url>
   <url><loc>https://xargas.eu/embeddedsw/index.html</loc></url>
-  <url><loc>https://xargas.eu/embeddedsw/platformio_boards.html</loc></url>
   
   <url><loc>https://xargas.eu/2025/01/22/start.html</loc></url>
   <url><loc>https://xargas.eu/2025/01/23/buildFreeCAD.html</loc></url>
@@ -24,5 +24,6 @@
   <url><loc>https://xargas.eu/2025/02/06/gnuScreenSshLogin.html</loc></url>
   <url><loc>https://xargas.eu/2025/02/06/laravelSetupOnPi.html</loc></url>
   <url><loc>https://xargas.eu/2025/02/18/ffmpegToGif.html</loc></url>
+  <url><loc>https://xargas.eu/2025/05/02/usbStickTests.html</loc></url>
   
 </urlset>

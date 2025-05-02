@@ -37,32 +37,19 @@
       <div class="blog">
   
     <div class="blog-entry">
+      <h1 class="blog-title"><a href="/2025/05/02/usbStickTests.html">USB Stick Tests</a></h1>
+      <span class="blog-date">02.05.2025</span>
+      <hr>
+      <div class="blog-content"><p>Over time I gathered a bunch of USB sticks I wanted to verify if they are still good and usable. For such a task I found the tools <code class="language-plaintext highlighter-rouge">f3probe</code> and <code class="language-plaintext highlighter-rouge">fio</code>.
+So, I installed both on a Linux based PC (I used a Gentoo based one, but WSL based should also do).</p>
+</div>
+    </div>
+  
+    <div class="blog-entry">
       <h1 class="blog-title"><a href="/2025/02/18/ffmpegToGif.html">Create GIF from video using ffmpeg</a></h1>
       <span class="blog-date">18.02.2025</span>
       <hr>
       <div class="blog-content"><p>After developing code for a new approach for handling parameters in <a href="https://www.freecad.org/">FreeCAD</a> I wanted to present it to other FreeCAD users to get some feedback. Of course, the code is still a prototype, but it is working and shows the intended workflow, so I wanted to know if other people also think something like this is useful.</p>
-
-<p>To present it, I wanted to show a small video, but the forum only allows files up to 1MB. So I wanted to create a small GIF showing the essentials.</p>
-
-<p>To capture the video from the FreeCAD window under Windows I used <a href="https://obsproject.com/">OBS Studio</a> with the FreeCAD window as video source.
-This way I got a <code class="language-plaintext highlighter-rouge">Prototype.mkv</code> video showing the workflow.</p>
-
-<p>Then I converted the video via ffmpeg to get the <code class="language-plaintext highlighter-rouge">Prototype.gif</code> file:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ffmpeg <span class="nt">-ss</span> 2 <span class="nt">-t</span> 50 <span class="nt">-i</span> Prototype.mkv <span class="nt">-vf</span> <span class="s2">"setpts=PTS/2,fps=1,crop=1547:1080:0:0,scale=1024:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse"</span> <span class="nt">-loop</span> 0 Prototype.gif
-</code></pre></div></div>
-
-<p>I applied filtering to get the file size down:</p>
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">-ss 2</code> to skip the first two seconds</li>
-  <li><code class="language-plaintext highlighter-rouge">-t 50</code> to convert the next 50 seconds, so the interval that is converted is [2;52] seconds</li>
-  <li><code class="language-plaintext highlighter-rouge">setpts=PTS/2,fps=1</code> to make the GIF 2 times faster then the captured video and have 1 image per second in the GIF</li>
-  <li><code class="language-plaintext highlighter-rouge">crop=1547:1080:0:0,scale=1024:-1:flags=lanczos</code> to crop to the main window, scale the image down to 1024 pixels height to get a smaller file size</li>
-  <li><code class="language-plaintext highlighter-rouge">split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse</code> to split the input to two virtual outputs s0 and s1, where s0 is used to generate the GIF color palette and s1 will use the generated GIF color palette</li>
-  <li><code class="language-plaintext highlighter-rouge">-loop 0</code> to let the GIF loop indefinitely</li>
-</ul>
-
-<p>Now I had everything to create a <a href="https://forum.freecad.org/viewtopic.php?t=94916">post in the FreeCAD forum.</a></p>
 </div>
     </div>
   
@@ -72,75 +59,6 @@ This way I got a <code class="language-plaintext highlighter-rouge">Prototype.mk
       <hr>
       <div class="blog-content"><p>The official website of Laravel has already a <a href="https://laravel.com/docs/11.x">documentation</a> on howto install it on a Linux OS, but it requires to trust the installer script. This would have been run directly on the local machine without prior checking the contents and what is really done.
 Of course I manually checked the install script and did not like what I found. The installed elements would not be tracked by the package manager, it would install another certificate authority list for the local installation. Things I consider non-maintainable or unsafe. So I wanted to go another (more clean?) way on a Raspberry Pi.</p>
-
-<ol>
-  <li>First I needed to install the necessary tools using the commandline.
-    <ul>
-      <li>I wanted to use <code class="language-plaintext highlighter-rouge">nginx</code> to serve the websites.</li>
-      <li>I wanted to use <code class="language-plaintext highlighter-rouge">php-fpm</code> because it is faster than the apache and/or cgi combinations. And of course because it runs on a Raspberry Pi.</li>
-      <li>I needed <code class="language-plaintext highlighter-rouge">composer</code> for php packages.</li>
-    </ul>
-
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aptitude <span class="nb">install </span>nginx php-fpm composer
-</code></pre></div>    </div>
-  </li>
-  <li>
-    <p>I then configured nginx to serve a new site by adding a file <code class="language-plaintext highlighter-rouge">/etc/nginx/sites-available/laravel-www</code>:</p>
-
-    <div class="language-nginx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">server</span> <span class="p">{</span>
-     <span class="kn">listen</span> <span class="mi">80</span> <span class="s">default_server</span><span class="p">;</span>
-     <span class="kn">listen</span> <span class="s">[::]:80</span> <span class="s">default_server</span><span class="p">;</span>
-
-     <span class="kn">root</span> <span class="n">/var/www/laravel-www</span><span class="p">;</span>
-
-     <span class="kn">index</span> <span class="s">index.php</span><span class="p">;</span>
-
-     <span class="kn">server_name</span> <span class="s">_</span><span class="p">;</span>
-
-     <span class="kn">charset</span> <span class="s">utf-8</span><span class="p">;</span>
-
-     <span class="kn">location</span> <span class="n">/</span> <span class="p">{</span>
-             <span class="kn">try_files</span> <span class="nv">$uri</span> <span class="nv">$uri</span><span class="n">/</span> <span class="n">/index.php?</span><span class="nv">$query_string</span><span class="p">;</span>
-     <span class="p">}</span>
-
-     <span class="kn">location</span> <span class="p">=</span> <span class="n">/favicon.ico</span> <span class="p">{</span> <span class="kn">access_log</span> <span class="no">off</span><span class="p">;</span> <span class="kn">log_not_found</span> <span class="no">off</span><span class="p">;</span> <span class="p">}</span>
-     <span class="kn">location</span> <span class="p">=</span> <span class="n">/robots.txt</span>  <span class="p">{</span> <span class="kn">access_log</span> <span class="no">off</span><span class="p">;</span> <span class="kn">log_not_found</span> <span class="no">off</span><span class="p">;</span> <span class="p">}</span>
-
-     <span class="kn">error_page</span> <span class="mi">404</span> <span class="n">/index.php</span><span class="p">;</span>
-
-     <span class="kn">location</span> <span class="p">~</span> <span class="sr">\.php$</span> <span class="p">{</span>
-             <span class="kn">fastcgi_pass</span> <span class="s">unix:/run/php/php-fpm.sock</span><span class="p">;</span>
-             <span class="kn">fastcgi_param</span> <span class="s">SCRIPT_FILENAME</span> <span class="nv">$realpath_root$fastcgi_script_name</span><span class="p">;</span>
-             <span class="kn">include</span> <span class="s">fastcgi.conf</span><span class="p">;</span>
-             <span class="kn">fastcgi_hide_header</span> <span class="s">X-Powered-By</span><span class="p">;</span>
-     <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>    </div>
-    <p>This already contains the necessary parts for serving on a HTTP server (no SSL here at the moment!) using the installed PHP version.
-I used the version-free <code class="language-plaintext highlighter-rouge">php-fpm</code> symlink so updating/changing to another PHP version is easier later.</p>
-  </li>
-  <li>The site was then activated to be served already, as it was not public on the internet:
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">ln</span> <span class="nt">-s</span> /etc/nginx/sites-available/laravel-www /etc/nginx/sites-enabled/laravel-www
-nginx <span class="nt">-s</span> reload
-</code></pre></div>    </div>
-  </li>
-  <li>Now I used <code class="language-plaintext highlighter-rouge">composer</code> to get the basic laravel installation:
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> /var/www/
-<span class="nb">mkdir </span>laravel-www
-composer create-project laravel/laravel laravel-www
-</code></pre></div>    </div>
-  </li>
-  <li>For the installation to work, I needed to setup some access rights, as <code class="language-plaintext highlighter-rouge">nginx</code> is running as <code class="language-plaintext highlighter-rouge">www-data</code> user:
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">chown</span> <span class="nt">-R</span> www-data.www-data /var/www/laravel-www
-</code></pre></div>    </div>
-  </li>
-  <li>For the Laravel project itself, my first start should used the <code class="language-plaintext highlighter-rouge">sqlite</code> database to just show that the laravel part is working. So I initialized it using the default configurations in the <code class="language-plaintext highlighter-rouge">/var/www/laravel-www/.env</code> file via:
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> /var/www/laravel-www
-php artisan migrate
-</code></pre></div>    </div>
-  </li>
-  <li>Now I had the basic laravel project up and running (For later reference: Laravel v11.41.3 (PHP v8.2.7))</li>
-</ol>
 </div>
     </div>
   
@@ -149,13 +67,6 @@ php artisan migrate
       <span class="blog-date">06.02.2025</span>
       <hr>
       <div class="blog-content"><p>Whenever I log into a remote Linux based machine via SSH, I first start a GNU screen session. Any when I forget, I often regret it when I close the session window, as this also terminates the processes I usually want to continue in the background.</p>
-
-<p>To not be able to forget this, I added</p>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># for SSH sessions which are not already in gnu screen -&gt; attach to a detached one or create a new session</span>
-<span class="k">if</span> <span class="o">[[</span> <span class="o">!</span> <span class="nt">-z</span> <span class="s2">"</span><span class="k">${</span><span class="nv">SSH_CLIENT</span><span class="k">}</span><span class="s2">"</span> <span class="o">&amp;&amp;</span> <span class="nt">-z</span> <span class="s2">"</span><span class="k">${</span><span class="nv">STY</span><span class="k">}</span><span class="s2">"</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then </span>screen <span class="nt">-RR</span><span class="p">;</span> <span class="k">fi</span>
-</code></pre></div></div>
-<p>at the end of <code class="language-plaintext highlighter-rouge">~/.bashrc</code> to automatically reconnect to a previous screen session, or connect to a new screen session if no detached one is available. It does that only for SSH logins and only if the shell is not already inside a screen session (this avoids recursive loops).</p>
-
 </div>
     </div>
   
@@ -166,71 +77,6 @@ php artisan migrate
       <div class="blog-content"><p><a href="https://pi-hole.net/">Pi-Hole</a> is, in my opinion, a great tool for blocking ads, tracking and malware. But sometimes it seems to be blocking a bit too much.
 One case I identified were sites that would come up as small ads in my Google searches. I still wanted those links to work.
 My analysis showed that the needed target URL was nicely encoded in the advertisement URL. So I thought of <a href="https://nginx.org/">nginx</a> for a solution.</p>
-
-<p>The easy part with nginx is the redirection of one URL to another URL. Just use <code class="language-plaintext highlighter-rouge">rewrite</code> or <code class="language-plaintext highlighter-rouge">return</code> filters.
-This works very well, until the URL uses encoded characters. I also wanted to cover this case and did some research on options.
-The one I found was using perl to do the encoding/decoding.</p>
-
-<p>After installing nginx, I created the file <code class="language-plaintext highlighter-rouge">/etc/nginx/sites-available/googleadservices-redirect</code>, linked it to the <code class="language-plaintext highlighter-rouge">sites-enabled</code> and used it in a SSL configured nginx instance:</p>
-<div class="language-nginx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">perl_set</span> <span class="nv">$localuri</span> <span class="s">'</span>
-  <span class="s">sub</span> <span class="p">{</span>
-    <span class="kn">my</span> <span class="nv">$r</span> <span class="p">=</span> <span class="s">shift</span><span class="p">;</span>
-    <span class="kn">my</span> <span class="nv">$arg_adurl</span> <span class="p">=</span> <span class="nv">$r-</span><span class="s">&gt;variable("arg_adurl")</span><span class="p">;</span>
-    <span class="kn">my</span> <span class="nv">$arg_adurl_decoded</span> <span class="p">=</span> <span class="nv">$r-</span><span class="s">&gt;unescape(</span><span class="nv">$arg_adurl</span><span class="s">)</span><span class="p">;</span>
-    <span class="kn">return</span> <span class="nv">$arg_adurl_decoded</span><span class="p">;</span>
-  <span class="p">}</span>
-<span class="k">'</span><span class="p">;</span>
-
-<span class="k">server</span> <span class="p">{</span>
-  <span class="kn">listen</span> <span class="mi">443</span> <span class="s">ssl</span> <span class="s">default_server</span><span class="p">;</span>
-  <span class="kn">listen</span> <span class="s">[::]:443</span> <span class="s">ssl</span> <span class="s">default_server</span><span class="p">;</span>
-
-  <span class="kn">ssl_certificate</span> <span class="n">/etc/nginx/ssl/nginx-self-signed.crt</span><span class="p">;</span>
-  <span class="kn">ssl_certificate_key</span> <span class="n">/etc/nginx/ssl/nginx-self-signed.key</span><span class="p">;</span>
-
-  <span class="kn">gzip</span> <span class="no">off</span><span class="p">;</span>
-
-  <span class="kn">server_name</span> <span class="s">www.googleadservices.com</span><span class="p">;</span>
-
-  <span class="kn">return</span> <span class="mi">301</span> <span class="nv">$localuri</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p>As all redirects are only in local networks, self signed certificates created via openssl were good enough:</p>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl req <span class="nt">-x509</span> <span class="nt">-newkey</span> rsa:4096 <span class="nt">-days</span> 365 <span class="nt">-nodes</span> <span class="nt">-keyout</span> /etc/nginx/ssl/nginx-self-signed.key <span class="nt">-out</span> /etc/nginx/ssl/nginx-self-signed.crt <span class="nt">-subj</span> <span class="s2">"/CN=www.googleadservices.com"</span>
-  <span class="nt">-addext</span> <span class="s2">"subjectAltName=DNS:www.googleadservices.com,DNS:googleadservices.com,IP:192.168.0.250"</span>
-</code></pre></div></div>
-
-<p>On the other side, I only needed to support most modern software, so I restricted encryption options in <code class="language-plaintext highlighter-rouge">/etc/nginx/nginx.conf</code> and enabled the perl module:</p>
-<div class="language-nginx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">http</span> <span class="p">{</span>
-  <span class="kn">perl_modules</span> <span class="nc">perl/lib</span><span class="p">;</span>
-  <span class="kn">...</span><span class="p">;</span>
-  <span class="kn">ssl_protocols</span> <span class="s">TLSv1.3</span><span class="p">;</span>
-  <span class="kn">ssl_ecdh_curve</span> <span class="s">X25519:prime256v1:secp384r1</span><span class="p">;</span>
-  <span class="kn">ssl_prefer_server_ciphers</span> <span class="no">on</span><span class="p">;</span>
-  <span class="kn">...</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p>I redirected the DNS <code class="language-plaintext highlighter-rouge">www.googleadservices.com</code> via Pi-hole to the nginx installation and then I had the necessary redirects working locally. Problem solved.</p>
-</div>
-    </div>
-  
-    <div class="blog-entry">
-      <h1 class="blog-title"><a href="/2025/02/05/bashPromptMachineIcon.html">Icon/emoji in bash prompt for easier machine identification</a></h1>
-      <span class="blog-date">05.02.2025</span>
-      <hr>
-      <div class="blog-content"><p>Using Linux on various machines, I wanted to have something that helped me to identify on which machine I am currently working.
-The usual bash prompt settings in PS1 indicate this, but I needed to read the text. I wanted something more intuitive.
-Searching for a solution I found that modern bash is capable of using unicode. So I found my solution.</p>
-
-<p>To get to the needed unicode I used the <a href="https://emojipedia.org/">Emojipedia</a>. There I selected to use 🍓 for a Raspberry Pi device and 🪟 for a Windows Subsystem Linux installation.</p>
-
-<p>To get the icon into the prompt I just copied the unicode character and pasted it into the PS1 prompt in the <code class="language-plaintext highlighter-rouge">~/.bashrc</code> file.</p>
-
-<p>Example:</p>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">PS1</span><span class="o">=</span><span class="s1">'${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\] 🪟:\[\033[01;34m\]\w\[\033[00m\]\$ '</span>
-</code></pre></div></div>
 </div>
     </div>
   

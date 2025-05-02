@@ -40,7 +40,8 @@
   <hr>
   <div class="post-content"><p><a href="https://pi-hole.net/">Pi-Hole</a> is, in my opinion, a great tool for blocking ads, tracking and malware. But sometimes it seems to be blocking a bit too much.
 One case I identified were sites that would come up as small ads in my Google searches. I still wanted those links to work.
-My analysis showed that the needed target URL was nicely encoded in the advertisement URL. So I thought of <a href="https://nginx.org/">nginx</a> for a solution.</p>
+My analysis showed that the needed target URL was nicely encoded in the advertisement URL. So I thought of <a href="https://nginx.org/">nginx</a> for a solution.
+<!--more--></p>
 
 <p>The easy part with nginx is the redirection of one URL to another URL. Just use <code class="language-plaintext highlighter-rouge">rewrite</code> or <code class="language-plaintext highlighter-rouge">return</code> filters.
 This works very well, until the URL uses encoded characters. I also wanted to cover this case and did some research on options.

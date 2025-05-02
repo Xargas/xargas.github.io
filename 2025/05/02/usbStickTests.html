@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>
+      
+        USB Stick Tests &middot; xargas.eu
+      
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/public/style.css">
+    <link rel="stylesheet" href="/public/syntax.css">
+  </head>
+
+  <body>
+    <div class="navbar">
+      <h1>Xargas.eu</h1>
+      <p>Private website to write about my hobbies</p>
+      <a class="navbar-item" href="/">Home</a>
+      
+        <a class="navbar-item" href="/blog/">Blog</a>
+      
+        <a class="navbar-item" href="/3dprint/index.html">3D Printing</a>
+      
+        <a class="navbar-item" href="/3dmodel/index.html">3D Modeling</a>
+      
+        <a class="navbar-item" href="/embeddedsw/index.html">Embedded Software</a>
+      
+      
+        <a class="navbar-item" href="/pages/impressum.html">Impressum</a>
+
+      <p>&copy; 2025. All rights reserved.</p>
+    </div>
+    <div class="content">
+      <div class="post post-entry">
+  <h1 class="post-title">USB Stick Tests</h1>
+  <span class="post-date">02.05.2025</span>
+  <hr>
+  <div class="post-content"><p>Over time I gathered a bunch of USB sticks I wanted to verify if they are still good and usable. For such a task I found the tools <code class="language-plaintext highlighter-rouge">f3probe</code> and <code class="language-plaintext highlighter-rouge">fio</code>.
+So, I installed both on a Linux based PC (I used a Gentoo based one, but WSL based should also do).
+<!--more--></p>
+
+<p>I prepared a small script to always get the same tests for the USB sticks:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+<span class="nv">fileToTest</span><span class="o">=</span><span class="s2">"/dev/sdd"</span>
+
+<span class="c">################################################################################</span>
+<span class="c"># check validity</span>
+f3probe <span class="nt">--destructive</span> <span class="nt">--time-ops</span> <span class="s2">"</span><span class="nv">$fileToTest</span><span class="s2">"</span> 2&gt;&amp;1 <span class="o">&gt;</span> f3.log
+
+<span class="c">################################################################################</span>
+<span class="c"># generate io performance data</span>
+fio <span class="nt">--output</span><span class="o">=</span>fioJobs.log       <span class="nt">--filename</span><span class="o">=</span><span class="s2">"</span><span class="nv">$fileToTest</span><span class="s2">"</span> fioJobs
+</code></pre></div></div>
+<p>The <code class="language-plaintext highlighter-rouge">fileToTest</code> specifies the device which should be tested. And as always in Linux: “Everything is a file” 😊
+Important: this test completely overrides critical data on the USB stick, so ensure that it is empty, and you have a backup of important data before doing the test!</p>
+
+<p>And used it with the config file to get values for IOPS, throughput, latency, etc.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[global]
+
+[iopsWrite]
+rw=randwrite
+name=IOPS-write
+bs=4k
+direct=1
+numjobs=4
+ioengine=libaio
+iodepth=32
+refill_buffers
+group_reporting
+runtime=60
+time_based
+stonewall
+
+[iopsRead]
+rw=randread
+name=IOPS-read
+bs=4k
+direct=1
+numjobs=4
+ioengine=libaio
+iodepth=32
+refill_buffers
+group_reporting
+runtime=60
+time_based
+stonewall
+
+
+
+[latWrite]
+rw=randwrite
+name=latency-write
+bs=4k
+direct=1
+numjobs=4
+ioengine=libaio
+iodepth=1
+refill_buffers
+group_reporting
+runtime=60
+time_based
+stonewall
+
+[latRead]
+rw=randread
+name=latency-read
+bs=4k
+direct=1
+numjobs=4
+ioengine=libaio
+iodepth=1
+refill_buffers
+group_reporting
+runtime=60
+time_based
+stonewall
+
+
+
+[thruWrite]
+rw=randwrite
+name=throughput-write
+bs=1024k
+direct=1
+numjobs=4
+ioengine=libaio
+iodepth=32
+refill_buffers
+group_reporting
+runtime=60
+time_based
+stonewall
+
+[thruRead]
+rw=randread
+name=throughput-read
+bs=1024k
+direct=1
+numjobs=4
+ioengine=libaio
+iodepth=32
+refill_buffers
+group_reporting
+runtime=60
+time_based
+stonewall
+</code></pre></div></div>
+
+<p>I was lucky and only one, very old USB stick was not usable any more 😊</p>
+</div>
+</div>
+
+
+    </div>
+  </body>
+</html>
+
