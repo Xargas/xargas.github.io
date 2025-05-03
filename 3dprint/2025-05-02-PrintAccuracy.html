@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>
+      
+        3D Printers - Print Accuracy Prusa MK4S vs Anycubic K3M &middot; xargas.eu
+      
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/public/style.css">
+    <link rel="stylesheet" href="/public/syntax.css">
+  </head>
+
+  <body>
+    <div class="navbar">
+      <h1>Xargas.eu</h1>
+      <p>Private website to write about my hobbies</p>
+      <a class="navbar-item" href="/">Home</a>
+      
+        <a class="navbar-item" href="/blog/">Blog</a>
+      
+        <a class="navbar-item" href="/3dprint/index.html">3D Printing</a>
+      
+        <a class="navbar-item" href="/3dmodel/index.html">3D Modeling</a>
+      
+        <a class="navbar-item" href="/embeddedsw/index.html">Embedded Software</a>
+      
+      
+        <a class="navbar-item" href="/pages/impressum.html">Impressum</a>
+
+      <p>&copy; 2025. All rights reserved.</p>
+    </div>
+    <div class="content">
+      <div class="page">
+  <h1 class="page-title">3D Printers - Print Accuracy Prusa MK4S vs Anycubic K3M</h1>
+  <span class="page-date">Last Update: 02.05.2025</span>
+  <p>During printing of test objects for DnD board games I found that the Prusa MK4S and the Anycubic Kobra 3 Max (K3M) have a little different print accuracy. So, I was curious to investigate and note my findings on my website.</p>
+
+<p>As test print I used the <a href="https://www.printables.com/model/828876-hole-test-structure">hole test</a> model I created in the past, as the differences were notable for hole structures. Thus, I printed only 5mm height of the model to save time and material.</p>
+
+<h2 id="outer-dimensions">Outer dimensions</h2>
+
+<p>The prints I got were measured using a caliper and I got the following info for the outer dimensions (all values are in mm):</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Printer</th>
+      <th style="text-align: left">Setting</th>
+      <th style="text-align: right">Width</th>
+      <th style="text-align: right">Length</th>
+      <th style="text-align: right">Height</th>
+      <th style="text-align: right">Avg. Deviation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td> </td>
+      <td style="text-align: left">3D Model</td>
+      <td style="text-align: right">79.00</td>
+      <td style="text-align: right">23.00</td>
+      <td style="text-align: right">5.00</td>
+      <td style="text-align: right"> </td>
+    </tr>
+    <tr>
+      <td>K3M</td>
+      <td style="text-align: left">Standard</td>
+      <td style="text-align: right">78.91</td>
+      <td style="text-align: right">22.88</td>
+      <td style="text-align: right">4.87</td>
+      <td style="text-align: right">0.11</td>
+    </tr>
+    <tr>
+      <td>K3M</td>
+      <td style="text-align: left">Standard+LineWidth (*)</td>
+      <td style="text-align: right">78.90</td>
+      <td style="text-align: right">22.92</td>
+      <td style="text-align: right">4.85</td>
+      <td style="text-align: right">0.11</td>
+    </tr>
+    <tr>
+      <td>K3M</td>
+      <td style="text-align: left">Standard+HoleComp (**)</td>
+      <td style="text-align: right">78.96</td>
+      <td style="text-align: right">22.92</td>
+      <td style="text-align: right">4.89</td>
+      <td style="text-align: right">0.08</td>
+    </tr>
+    <tr>
+      <td>MK4S</td>
+      <td style="text-align: left">0.2mm structural</td>
+      <td style="text-align: right">78.85</td>
+      <td style="text-align: right">22.88</td>
+      <td style="text-align: right">5.04</td>
+      <td style="text-align: right">0.08</td>
+    </tr>
+    <tr>
+      <td>MK4S</td>
+      <td style="text-align: left">0.2mm speed</td>
+      <td style="text-align: right">78.88</td>
+      <td style="text-align: right">22.87</td>
+      <td style="text-align: right">5.03</td>
+      <td style="text-align: right">0.07</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>(*) 0.2mm Standard profile with 0.4mm nozzle, but Line width Default, Outer wall, etc. increased to 0.45mm (from 0.42mm), as the PrusaSlicer uses such widths for the MK4S</p>
+
+<p>(**) 0.2mm Standard profile with 0.4mm nozzle, but the “X-Y hole compensation” set to 0.15mm instead of the default 0.05mm</p>
+
+<p>So, in total really nice results and within the accuracy (not resolution!) of the caliper.</p>
+
+<h2 id="hole-dimensions">Hole dimensions</h2>
+
+<p>Going further to the hole dimensions I got the following measurements (all values are in mm):</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Printer</th>
+      <th style="text-align: left">Setting</th>
+      <th style="text-align: right">D2</th>
+      <th style="text-align: right">D3</th>
+      <th style="text-align: right">D4</th>
+      <th style="text-align: right">D5</th>
+      <th style="text-align: right">D6</th>
+      <th style="text-align: right">D7</th>
+      <th style="text-align: right">D8</th>
+      <th style="text-align: right">D9</th>
+      <th style="text-align: right">D10</th>
+      <th style="text-align: right">Avg. Deviation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>K3M</td>
+      <td style="text-align: left">Standard</td>
+      <td style="text-align: right">1.72</td>
+      <td style="text-align: right">2.84</td>
+      <td style="text-align: right">3.80</td>
+      <td style="text-align: right">4.81</td>
+      <td style="text-align: right">5.80</td>
+      <td style="text-align: right">6.86</td>
+      <td style="text-align: right">7.80</td>
+      <td style="text-align: right">8.87</td>
+      <td style="text-align: right">9.88</td>
+      <td style="text-align: right">0.18</td>
+    </tr>
+    <tr>
+      <td>K3M</td>
+      <td style="text-align: left">Standard+LineWidth (*)</td>
+      <td style="text-align: right">1.78</td>
+      <td style="text-align: right">2.79</td>
+      <td style="text-align: right">3.77</td>
+      <td style="text-align: right">4.82</td>
+      <td style="text-align: right">5.64</td>
+      <td style="text-align: right">6.72</td>
+      <td style="text-align: right">7.75</td>
+      <td style="text-align: right">8.69</td>
+      <td style="text-align: right">9.73</td>
+      <td style="text-align: right">0.26</td>
+    </tr>
+    <tr>
+      <td>K3M</td>
+      <td style="text-align: left">Standard+HoleComp (**)</td>
+      <td style="text-align: right">1.97</td>
+      <td style="text-align: right">2.98</td>
+      <td style="text-align: right">3.94</td>
+      <td style="text-align: right">5.02</td>
+      <td style="text-align: right">6.00</td>
+      <td style="text-align: right">7.10</td>
+      <td style="text-align: right">8.04</td>
+      <td style="text-align: right">9.03</td>
+      <td style="text-align: right">10.01</td>
+      <td style="text-align: right">-0.01</td>
+    </tr>
+    <tr>
+      <td>MK4S</td>
+      <td style="text-align: left">0.2mm structural</td>
+      <td style="text-align: right">1.83</td>
+      <td style="text-align: right">2.80</td>
+      <td style="text-align: right">3.93</td>
+      <td style="text-align: right">4.92</td>
+      <td style="text-align: right">5.92</td>
+      <td style="text-align: right">6.90</td>
+      <td style="text-align: right">7.93</td>
+      <td style="text-align: right">8.96</td>
+      <td style="text-align: right">9.91</td>
+      <td style="text-align: right">0.10</td>
+    </tr>
+    <tr>
+      <td>MK4S</td>
+      <td style="text-align: left">0.2mm speed</td>
+      <td style="text-align: right">1.91</td>
+      <td style="text-align: right">2.87</td>
+      <td style="text-align: right">3.95</td>
+      <td style="text-align: right">4.93</td>
+      <td style="text-align: right">5.92</td>
+      <td style="text-align: right">6.95</td>
+      <td style="text-align: right">7.95</td>
+      <td style="text-align: right">8.98</td>
+      <td style="text-align: right">9.97</td>
+      <td style="text-align: right">0.06</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>So the X-Y hole compensation setting was very usful for the K3M. I was surprised that the speed profile gave a better average deviation than the structural profile on the MK4S, but with only one print per setting it is hard to say if it was just a lucky print or not.</p>
+
+<h2 id="measurement-setup">Measurement setup</h2>
+
+<p>Hardware used:</p>
+<ul>
+  <li>CarlStahl digital caliper 150mm, 0.01mm resolution, ±0.03mm accuracy</li>
+  <li>SUNLU PLA Black</li>
+  <li>Prusa MK4S + MMU3, MK4S Firmware 6.2.3, MMU Firmware 3.0.3</li>
+  <li>Anycubic Kobra 3 Max, 8 Color Combo, Firmware V2.4.6_1.3.9_1.3.9_release</li>
+</ul>
+
+<p>Software used:</p>
+<ul>
+  <li>Anycubic Slicer Next 1.3.4.0 20250422181801</li>
+  <li>PrusaSlicer 2.9.2, Profiles from 02.05.2025</li>
+</ul>
+
+</div>
+
+    </div>
+  </body>
+</html>
+
