@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>
+      
+        RFID - read, write and copy &middot; xargas.eu
+      
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/public/style.css">
+    <link rel="stylesheet" href="/public/syntax.css">
+  </head>
+
+  <body>
+    <div class="navbar">
+      <h1>Xargas.eu</h1>
+      <p>Private website to write about my hobbies</p>
+      <a class="navbar-item" href="/">Home</a>
+      
+        <a class="navbar-item" href="/blog/">Blog</a>
+      
+        <a class="navbar-item" href="/3dprint/index.html">3D Printing</a>
+      
+        <a class="navbar-item" href="/3dmodel/index.html">3D Modeling</a>
+      
+        <a class="navbar-item" href="/embeddedsw/index.html">Embedded Software</a>
+      
+      
+        <a class="navbar-item" href="/pages/impressum.html">Impressum</a>
+
+      <p>&copy; 2025. All rights reserved.</p>
+    </div>
+    <div class="content">
+      <div class="page">
+  <h1 class="page-title">RFID - read, write and copy</h1>
+  <span class="page-date">Last Update: 08.07.2025</span>
+  <p>Out of curiosity I wanted to know the contents of RFID cards. Sometimes I get such cards for access of certain places, sometimes they store health data for emergencies (e.g. blood type). But what happens if one breaks?
+A replacement often costs more than just a new token with the necessary data saved on it. So I wanted a tool to be able to make backups.</p>
+
+<h2 id="goal">Goal</h2>
+
+<p>I wanted to be able to create backups of any kind of RFID card out there. While I did some research, I found that there are different types of cards and there is a chip that can read all common RFID cards: MFRC522.
+So, my basic hardware setup was decided to be:</p>
+<ul>
+  <li>Arduino Nano 3.3 BLE (nordicnrf52)</li>
+  <li>RFID-RC522 board</li>
+</ul>
+
+<p>I used an Arduino with BLE because I had one by hand. An Arduino Nano without BLE will also do.</p>
+
+<p>The wiring is straight forward using dupont wires. Just connect the SPI interface between the boards and supply the MFRC522 via the Arduino Nano.</p>
+
+<h2 id="software">Software</h2>
+
+<p>I used the <a href="https://platform.io/">platform.io</a> environment in Visual Studio Code to create the necessary software for the embedded device. With this I was able to create and handle all functions by command line. 
+The interface to the board was using UART over USB as it is easily available on Arduino boards. I created the UART interface to be interactive so I could use it via command line without looking up the commands. You can find the corresponding code on <a href="https://github.com/Xargas/rfid_copy">GitHub</a>.</p>
+
+<p><img src="/img/rfid_copy/uartInterface.png" alt="RfidDevice" /></p>
+
+<p>A while later I created a GUI app using C# with WPF in Visual Studio. It should only fully read or write a card. This made the project more accessible on PCs without UART terminal tool.</p>
+
+<p><img src="/img/rfid_copy/guiInterface.png" alt="RfidDevice" /></p>
+
+<h2 id="final-device">Final device</h2>
+
+<p>To actually have a usable device, I additionally designed a simple case to be 3D printed where the boards and the wiring fit in. I glued the lid and so I had a simple device for easy use.</p>
+
+<p><img src="/img/rfid_copy/device.jpg" alt="RfidDevice" /></p>
+
+</div>
+
+    </div>
+  </body>
+</html>
+
