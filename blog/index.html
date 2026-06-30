@@ -37,6 +37,37 @@
       <div class="blog">
   
     <div class="blog-entry">
+      <h1 class="blog-title"><a href="/2026/07/01/RamTreeMap.html">RamTreeMap</a></h1>
+      <span class="blog-date">01.07.2026</span>
+      <hr>
+      <div class="blog-content"><p>Searching for an easy-to-use tool to show the current RAM usage of a Windows PC in an intuitive way, I found a few options like:</p>
+<ul>
+  <li>Windows Task Manager and sort by “Working Set”</li>
+  <li><a href="https://learn.microsoft.com/de-de/sysinternals/downloads/rammap">Sysinternals RAMMap</a></li>
+  <li><a href="https://learn.microsoft.com/de-de/sysinternals/downloads/vmmap">Sysinternal VMMap</a></li>
+</ul>
+
+<p>However, none of those showed the data how I wanted it: in a tree map so that the image says it all.</p>
+
+<p>So I created a C# .NET 10 WPF application using calls to the Windows kernel to get such an image.
+It was an opportunity to evaluate the current abilities of AI tools like Copilot and Gemini inside and outside the IDE.</p>
+
+<p>My key takeaways on using AI for development:</p>
+<ul>
+  <li><strong>The Good</strong>: AI tools are incredibly helpful for quickly getting a prototype up and running.</li>
+  <li><strong>Prompting Tip</strong>: I highly recommend creating a single text file that gathers all of your application requirements before you start prompting. Feeding this into the AI keeps the generated code much more focused and aligned with your ultimate goal.</li>
+  <li><strong>The Catch</strong>: Reviewing the code after generation is essential to avoid running into hidden problems. Furthermore, in my experience building this app, maintenance tasks like code cleanup, deduplication, and architectural tuning are still very much a human task.</li>
+</ul>
+
+<p>I uploaded the tool here in case someone else is looking for something similar:
+<a href="https://github.com/Xargas/RamTreeMap">RamTreeMap</a></p>
+
+<p>Screenshot:
+<img src="https://raw.githubusercontent.com/Xargas/RamTreeMap/refs/heads/master/doc/screenshots/RamTreeMap_full.png" alt="RamTreeMap screenshot" /></p>
+</div>
+    </div>
+  
+    <div class="blog-entry">
       <h1 class="blog-title"><a href="/2026/03/01/list-of-sauna.html">Sauna in Austria</a></h1>
       <span class="blog-date">01.03.2026</span>
       <hr>
@@ -149,14 +180,6 @@ So, I installed both on a Linux based PC (I used a Gentoo based one, but WSL bas
       <hr>
       <div class="blog-content"><p>The official website of Laravel has already a <a href="https://laravel.com/docs/11.x">documentation</a> on howto install it on a Linux OS, but it requires to trust the installer script. This would have been run directly on the local machine without prior checking the contents and what is really done.
 Of course I manually checked the install script and did not like what I found. The installed elements would not be tracked by the package manager, it would install another certificate authority list for the local installation. Things I consider non-maintainable or unsafe. So I wanted to go another (more clean?) way on a Raspberry Pi.</p>
-</div>
-    </div>
-  
-    <div class="blog-entry">
-      <h1 class="blog-title"><a href="/2025/02/06/gnuScreenSshLogin.html">Using GNU Screen upon SSH login</a></h1>
-      <span class="blog-date">06.02.2025</span>
-      <hr>
-      <div class="blog-content"><p>Whenever I log into a remote Linux based machine via SSH, I first start a GNU screen session. Any when I forget, I often regret it when I close the session window, as this also terminates the processes I usually want to continue in the background.</p>
 </div>
     </div>
   

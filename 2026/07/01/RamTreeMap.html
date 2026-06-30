@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>
+      
+        RamTreeMap &middot; xargas.eu
+      
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/public/style.css">
+    <link rel="stylesheet" href="/public/syntax.css">
+  </head>
+
+  <body>
+    <div class="navbar">
+      <h1>Xargas.eu</h1>
+      <p>Private website to write about my hobbies</p>
+      <a class="navbar-item" href="/">Home</a>
+      
+        <a class="navbar-item" href="/blog/">Blog</a>
+      
+        <a class="navbar-item" href="/3dprint/index.html">3D Printing</a>
+      
+        <a class="navbar-item" href="/3dmodel/index.html">3D Modeling</a>
+      
+        <a class="navbar-item" href="/embeddedsw/index.html">Embedded Software</a>
+      
+      
+        <a class="navbar-item" href="/pages/impressum.html">Impressum</a>
+
+      <p>&copy; 2026. All rights reserved.</p>
+    </div>
+    <div class="content">
+      <div class="post post-entry">
+  <h1 class="post-title">RamTreeMap</h1>
+  <span class="post-date">01.07.2026</span>
+  <hr>
+  <div class="post-content"><p>Searching for an easy-to-use tool to show the current RAM usage of a Windows PC in an intuitive way, I found a few options like:</p>
+<ul>
+  <li>Windows Task Manager and sort by “Working Set”</li>
+  <li><a href="https://learn.microsoft.com/de-de/sysinternals/downloads/rammap">Sysinternals RAMMap</a></li>
+  <li><a href="https://learn.microsoft.com/de-de/sysinternals/downloads/vmmap">Sysinternal VMMap</a></li>
+</ul>
+
+<p>However, none of those showed the data how I wanted it: in a tree map so that the image says it all.</p>
+
+<p>So I created a C# .NET 10 WPF application using calls to the Windows kernel to get such an image.
+It was an opportunity to evaluate the current abilities of AI tools like Copilot and Gemini inside and outside the IDE.</p>
+
+<p>My key takeaways on using AI for development:</p>
+<ul>
+  <li><strong>The Good</strong>: AI tools are incredibly helpful for quickly getting a prototype up and running.</li>
+  <li><strong>Prompting Tip</strong>: I highly recommend creating a single text file that gathers all of your application requirements before you start prompting. Feeding this into the AI keeps the generated code much more focused and aligned with your ultimate goal.</li>
+  <li><strong>The Catch</strong>: Reviewing the code after generation is essential to avoid running into hidden problems. Furthermore, in my experience building this app, maintenance tasks like code cleanup, deduplication, and architectural tuning are still very much a human task.</li>
+</ul>
+
+<p>I uploaded the tool here in case someone else is looking for something similar:
+<a href="https://github.com/Xargas/RamTreeMap">RamTreeMap</a></p>
+
+<p>Screenshot:
+<img src="https://raw.githubusercontent.com/Xargas/RamTreeMap/refs/heads/master/doc/screenshots/RamTreeMap_full.png" alt="RamTreeMap screenshot" /></p>
+</div>
+</div>
+
+
+    </div>
+  </body>
+</html>
+
