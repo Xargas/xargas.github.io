@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "LadeinfrastrukturSim",
   "resources": {
-    "hash": "sha256-buPQLbyaHTSB2L6ongBH7C4pUfTLnp1kZWbK+LoryG0=",
+    "hash": "sha256-qvS3S3dUz8qKxerAQkmhIzkHQDOHItFU5u3WOgJ4M24=",
     "fingerprinting": {
       "Microsoft.AspNetCore.Components.lnp7c0u0uh.wasm": "Microsoft.AspNetCore.Components.wasm",
       "Microsoft.AspNetCore.Components.Web.tpttmwnfzo.wasm": "Microsoft.AspNetCore.Components.Web.wasm",
@@ -29,12 +29,12 @@
       "System.Net.Primitives.16gzwjvyds.wasm": "System.Net.Primitives.wasm",
       "System.Private.Uri.ryrxx37ccz.wasm": "System.Private.Uri.wasm",
       "System.Runtime.InteropServices.JavaScript.entgmum76f.wasm": "System.Runtime.InteropServices.JavaScript.wasm",
-      "System.Runtime.c3r2j3eboi.wasm": "System.Runtime.wasm",
+      "System.Runtime.xtki37nnwk.wasm": "System.Runtime.wasm",
       "System.Text.Encodings.Web.5fvutybsfe.wasm": "System.Text.Encodings.Web.wasm",
       "System.Text.Json.pgen3ced7y.wasm": "System.Text.Json.wasm",
       "System.Text.RegularExpressions.bidgyl3ygr.wasm": "System.Text.RegularExpressions.wasm",
       "System.Private.CoreLib.mrlgj4xdd6.wasm": "System.Private.CoreLib.wasm",
-      "LadeinfrastrukturSim.iyozlslhnx.wasm": "LadeinfrastrukturSim.wasm",
+      "LadeinfrastrukturSim.nh4b76bedj.wasm": "LadeinfrastrukturSim.wasm",
       "dotnet.native.3lry7ujn8p.js": "dotnet.native.js",
       "dotnet.native.gmq9n8rm07.wasm": "dotnet.native.wasm",
       "dotnet.js": "dotnet.js",
@@ -87,11 +87,11 @@
       "System.Net.Http.ftvzb9fat9.wasm": "sha256-06rkxYTfrFlXyogu91PmHL9m9dyddnEfeRv+EQ+82b4=",
       "System.Net.Primitives.16gzwjvyds.wasm": "sha256-Zwek3nNLw12+76CXXyCew7wJRWgXDJn+Kim6rJY332I=",
       "System.Private.Uri.ryrxx37ccz.wasm": "sha256-0yjicsckNXpJBkEmmVtJon0z9f/se/XioN/aVIjncTw=",
-      "System.Runtime.c3r2j3eboi.wasm": "sha256-WItna0ncm5utfr8kXrdU4UZvISDIDCkNcnmdfj9IvWA=",
+      "System.Runtime.xtki37nnwk.wasm": "sha256-9cimMaYJzSIwyJRpMOFoEcC9HomenVL8hi3ZJTA79Zg=",
       "System.Text.Encodings.Web.5fvutybsfe.wasm": "sha256-b1D9iqancTKd5GC+Q16oTee9+7nwx2XTbl9FazMU+MY=",
       "System.Text.Json.pgen3ced7y.wasm": "sha256-B6T32kvAqK3lU4bnWS5MSZOX7I9NZa6rbOQhiG0nW3w=",
       "System.Text.RegularExpressions.bidgyl3ygr.wasm": "sha256-Yy7QzVY0TlgBj00FZwuvPRRWpwvw0gM6xOUeIKrkUHE=",
-      "LadeinfrastrukturSim.iyozlslhnx.wasm": "sha256-5uGozlAw3cCzdDa9W4JttSASNF65y+OGq9WLVpdY7XQ="
+      "LadeinfrastrukturSim.nh4b76bedj.wasm": "sha256-e1oBeeJ0AQZQuBtyB8YXXUs8AuhgZLg+MuVxj4OK/xY="
     }
   },
   "cacheBootResources": true,
